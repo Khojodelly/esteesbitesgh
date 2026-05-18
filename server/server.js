@@ -523,7 +523,7 @@ app.post(
         // Uploaded image path
         const image =
             req.file
-            ? `http://localhost:5000/uploads/${req.file.filename}`
+            ? `https://esteesbites-backend.onrender.com/uploads/${req.file.filename}`
             : "";
 
         // Validation

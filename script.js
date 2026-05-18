@@ -495,7 +495,7 @@ if (checkoutForm) {
         try {
 
             const response = await fetch(
-                "http://localhost:5000/api/orders",
+                "https://esteesbites-backend.onrender.com/api/orders",
                 {
                     method: "POST",
                     headers: {
@@ -655,7 +655,7 @@ if (mealsContainer) {
         </div>
     `;
 
-    fetch("http://localhost:5000/api/meals")
+    fetch("https://esteesbites-backend.onrender.com/api/meals")
 
         .then(response => {
             if (!response.ok) {
@@ -815,7 +815,7 @@ if(loginForm){
 
         try{
 
-            const response = await fetch("http://localhost:5000/api/login",
+            const response = await fetch("https://esteesbites-backend.onrender.com/api/login",
 
 
                 {
@@ -925,7 +925,7 @@ if(registerForm){
 
             const response = await fetch(
 
-                "/api/register",
+                "https://esteesbites-backend.onrender.com/api/register",
 
                 {
 
@@ -1135,7 +1135,7 @@ if (ordersContainer) {
             </div>
         `;
 
-        fetch(`http://localhost:5000/api/orders/${loggedUser.id}`)
+        fetch(`https://esteesbites-backend.onrender.com/api/orders/${loggedUser.id}`)
 
             .then(response => response.json())
 
@@ -1325,7 +1325,7 @@ function loadAdminOrders(page = 1){
         </div>
     `;
 
-    fetch(`http://localhost:5000/api/admin/orders?page=${page}&limit=${adminLimit}`, {
+    fetch(`https://esteesbites-backend.onrender.com/api/admin/orders?page=${page}&limit=${adminLimit}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -1495,7 +1495,7 @@ document.addEventListener("change", async (e) => {
 
         try {
 
-            const response = await fetch(`http://localhost:5000/api/admin/orders/${orderId}`,
+            const response = await fetch(`https://esteesbites-backend.onrender.com/api/admin/orders/${orderId}`,
 
                 {
 
@@ -1594,7 +1594,7 @@ if (addMealForm) {
 
                 const response = await fetch(
 
-                    "http://localhost:5000/api/admin/meals",
+                    "https://esteesbites-backend.onrender.com/api/admin/meals",
 
                     {
 
@@ -1673,7 +1673,7 @@ if (adminMealsContainer) {
         Loading meals...
     </div>
 `;
-fetch("http://localhost:5000/api/admin/meals", {
+fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
     headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
     }
@@ -1809,7 +1809,7 @@ document.addEventListener("click", async (e) => {
 
         try {
 
-            const response = await fetch(`http://localhost:5000/api/admin/meals/${mealId}`, {
+            const response = await fetch(`https://esteesbites-backend.onrender.com/api/admin/meals/${mealId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -1935,7 +1935,7 @@ if (editMealForm) {
 
                 const response = await fetch(
 
-                    `http://localhost:5000/api/admin/meals/${id}`,
+                    `https://esteesbites-backend.onrender.com/api/admin/meals/${id}`,
 
                     {
 
@@ -2003,7 +2003,7 @@ const statusChartCanvas =
 
 if (revenueChartCanvas && statusChartCanvas) {
 
-    fetch("http://localhost:5000/api/admin/analytics", {
+    fetch("https://esteesbites-backend.onrender.com/api/admin/analytics", {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
