@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menu | ESTEESBITES</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <!-- Navbar Start -->
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
+
+    <div class="container">
+
+        <a class="navbar-brand" href="index.html">
+            ESTEESBITES
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                <!-- Main Links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="menu.html">
+                        Menu
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">
+                        About
+                    </a>
+                </li>
+
+                <!-- Customer Links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">
+                        Cart
+                        <span class="badge bg-danger" id="cart-count">
+                            0
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="orders.html">
+                        Orders
+                    </a>
+                </li>
+
+                <!-- Guest Links -->
+                <li class="nav-item" id="login-link">
+                    <a class="nav-link" href="login.html">
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item" id="register-link">
+                    <a class="nav-link register-btn" href="register.html">
+                        Register
+                    </a>
+                </li>
+
+                <li class="nav-item d-none" id="admin-link">
+                    <a class="nav-link" href="admin.html">
+                        Admin
+                    </a>
+                </li>
+
+                <!-- Logged-in User -->
+                <li class="nav-item d-none" id="user-info">
+                    <span class="nav-link fw-bold" id="username"></span>
+                </li>
+
+                
+
+                <li class="nav-item d-none" id="logout-item">
+                    <button class="btn btn-danger btn-sm ms-lg-2" id="logout-btn">
+                        Logout
+                    </button>
+                </li>
+
+                <!-- Dark Mode -->
+                <li class="nav-item">
+                    <button class="btn btn-outline-light btn-sm ms-lg-2"
+                            id="dark-mode-toggle">
+                        🌙
+                    </button>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- Navbar End -->
+
+
+<!-- About Hero Start -->
+<section class="bg-black text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-5 fw-bold">About ESTEESBITES</h1>
+        <p class="lead">Fresh meals, warm service, and delicious memories.</p>
+    </div>
+</section>
+<!-- About Hero End -->
+
+
+<!-- About Story Start -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <img src="images/about-food.jpg"
+                     class="img-fluid rounded-4 shadow"
+                     alt="ESTEESBITES food">
+            </div>
+
+            <div class="col-lg-6">
+                <span class="menu-small-title">Our Story</span>
+
+                <h2 class="fw-bold mt-2 mb-4">
+                    Homemade Taste, Delivered With Love
+                </h2>
+
+                <p class="text-muted">
+                    ESTEESBITES was created from a passion for cooking and serving
+                    delicious meals that bring people together. What started as a
+                    dream to open a restaurant is now beginning online, making it
+                    easier for customers to enjoy fresh and tasty food from anywhere.
+                </p>
+
+                <p class="text-muted">
+                    Every meal is prepared with care, quality ingredients, and the
+                    goal of giving customers a satisfying food experience.
+                </p>
+
+                <a href="menu.html" class="btn btn-dark mt-3">
+                    Explore Menu
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- About Story End -->
+
+
+<!-- Why Choose Us Start -->
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <span class="menu-small-title">Why Choose Us</span>
+            <h2 class="fw-bold mt-2">What Makes Us Special</h2>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4 text-center h-100">
+                    <div class="about-icon">🍲</div>
+                    <h5 class="fw-bold mt-3">Fresh Meals</h5>
+                    <p class="text-muted">
+                        Meals are prepared fresh with quality ingredients.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4 text-center h-100">
+                    <div class="about-icon">🚚</div>
+                    <h5 class="fw-bold mt-3">Fast Delivery</h5>
+                    <p class="text-muted">
+                        We deliver your favorite meals quickly and safely.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4 text-center h-100">
+                    <div class="about-icon">❤️</div>
+                    <h5 class="fw-bold mt-3">Made With Love</h5>
+                    <p class="text-muted">
+                        Every order is handled with care and passion.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- Why Choose Us End -->
+
+
+<!-- Chef Section Start -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+                <span class="menu-small-title">Meet The Chef</span>
+
+                <h2 class="fw-bold mt-2 mb-4">
+                    Passion Behind Every Bite
+                </h2>
+
+                <p class="text-muted">
+                    ESTEESBITES is powered by a chef with a love for preparing
+                    tasty meals and creating happy food experiences. The goal is
+                    to grow from an online restaurant into a trusted food brand
+                    customers can always count on.
+                </p>
+            </div>
+
+            <div class="col-lg-6">
+
+    <!-- Chef Profile -->
+    <div class="chef-profile-card shadow-sm rounded-4 p-4 mb-4">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <img src="images/chef-esther.jpg"
+                 alt="Chef Esther"
+                 class="chef-image">
+
+            <div>
+
+                <h5 class="fw-bold mb-1">
+                    Esther Bawanin
+                </h5>
+
+                <small class="text-muted">
+                    Head Chef • ESTEESBITES
+                </small>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <p class="text-muted mb-2">
+
+            Esther Bawanin holds an HND in
+            Hotel Catering and Institution Management
+            from Sunyani Technical University.
+
+        </p>
+
+        <p class="text-muted mb-0">
+
+            She also gained professional experience
+            working for one year at Golden Beam Hotel,
+            Kumasi, where she developed her passion
+            for preparing quality meals and delivering
+            excellent customer satisfaction.
+
+        </p>
+
+    </div>
+
+    <!-- Mission Card -->
+    <div class="chef-card shadow-sm p-4 rounded-4">
+
+        <h4 class="fw-bold">
+            Our Mission
+        </h4>
+
+        <p class="text-muted mb-0">
+
+            To serve delicious, affordable,
+            and reliable meals while building
+            a restaurant brand customers
+            love and trust.
+
+        </p>
+
+    </div>
+
+</div>
+
+        </div>
+    </div>
+</section>
+<!-- Chef Section End -->
+
+
+<!-- Footer Start -->
+
+<footer class="premium-footer text-white pt-5 pb-4">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-3 col-md-6">
+
+                <h3 class="footer-logo">
+                    ESTEESBITES
+                </h3>
+
+                <p class="footer-text">
+                    Delicious meals delivered fast,
+                    fresh, and affordable.
+                </p>
+
+                <div class="footer-socials">
+
+                    <a href="#">f</a>
+                    <a href="#">◎</a>
+                    <a href="tel:+233594909546">☏</a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Quick Links
+                </h5>
+
+                <ul class="list-unstyled footer-links">
+
+                    <li><a href="index.html">› Home</a></li>
+                    <li><a href="menu.html">› Menu</a></li>
+                    <li><a href="about.html">› About</a></li>
+                    <li><a href="cart.html">› Cart</a></li>
+
+                </ul>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Contact
+                </h5>
+
+                <p class="footer-text">
+                    ✉ info@esteesbites.com
+                </p>
+
+                <p class="footer-text">
+                    ☎ +233 59 490 9546
+                </p>
+
+                <p class="footer-text">
+                    📍 Ghana
+                </p>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Opening Hours
+                </h5>
+
+                <p class="footer-text">
+                    🕒 Mon - Sun
+                </p>
+
+                <p class="footer-text">
+                    8:00 AM - 10:00 PM
+                </p>
+
+            </div>
+
+        </div>
+
+        <hr class="footer-line">
+
+        <div class="text-center">
+
+            <p class="mb-0 footer-copy">
+                © 2026 ESTEESBITES. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- Footer End -->
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>

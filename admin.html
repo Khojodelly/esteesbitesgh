@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin | ESTEESBITES</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+        <!-- Navbar Start -->
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
+
+    <div class="container">
+
+        <a class="navbar-brand" href="index.html">
+            ESTEESBITES
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                <!-- Main Links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="menu.html">
+                        Menu
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">
+                        About
+                    </a>
+                </li>
+
+                <!-- Customer Links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">
+                        Cart
+                        <span class="badge bg-danger" id="cart-count">
+                            0
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="orders.html">
+                        Orders
+                    </a>
+                </li>
+
+                <!-- Guest Links -->
+                <li class="nav-item" id="login-link">
+                    <a class="nav-link" href="login.html">
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item" id="register-link">
+                    <a class="nav-link register-btn" href="register.html">
+                        Register
+                    </a>
+                </li>
+
+                <li class="nav-item d-none" id="admin-link">
+                    <a class="nav-link" href="admin.html">
+                        Admin
+                    </a>
+                </li>
+
+                <!-- Logged-in User -->
+                <li class="nav-item d-none" id="user-info">
+                    <span class="nav-link fw-bold" id="username"></span>
+                </li>
+
+                
+
+                <li class="nav-item d-none" id="logout-item">
+                    <button class="btn btn-danger btn-sm ms-lg-2" id="logout-btn">
+                        Logout
+                    </button>
+                </li>
+
+                <!-- Dark Mode -->
+                <li class="nav-item">
+                    <button class="btn btn-outline-light btn-sm ms-lg-2"
+                            id="dark-mode-toggle">
+                        🌙
+                    </button>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- Navbar End -->
+
+<script>
+    (function(){
+
+        const adminUserCheck =
+            JSON.parse(localStorage.getItem("loggedUser"));
+
+        if (
+            !adminUserCheck ||
+            adminUserCheck.role !== "admin"
+        ) {
+            localStorage.setItem("showLoginToast", "1");
+            window.location.href = "login.html";
+        }
+
+    })();
+</script>
+
+<!-- Dashboard Section Start -->
+
+<section class="py-5">
+
+    <div class="container">
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-5">
+
+            <!-- Total Orders -->
+<div class="col-md-4">
+
+    <div class="card admin-stat-card shadow-sm border-0 p-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <p class="text-muted mb-2">
+
+                    Total Orders
+
+                </p>
+
+                <h2 class="fw-bold"
+                    id="admin-total-orders">
+
+                    0
+
+                </h2>
+
+            </div>
+
+            <div class="stat-icon bg-primary">
+
+                📦
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Customers -->
+<div class="col-md-4">
+
+    <div class="card admin-stat-card shadow-sm border-0 p-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <p class="text-muted mb-2">
+
+                    Customers
+
+                </p>
+
+                <h2 class="fw-bold"
+                    id="admin-total-customers">
+
+                    0
+
+                </h2>
+
+            </div>
+
+            <div class="stat-icon bg-success">
+
+                👥
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Revenue -->
+<div class="col-md-4">
+
+    <div class="card admin-stat-card shadow-sm border-0 p-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <p class="text-muted mb-2">
+
+                    Revenue
+
+                </p>
+
+                <h2 class="fw-bold"
+                    id="admin-total-revenue">
+
+                    GH₵ 0
+
+                </h2>
+
+            </div>
+
+            <div class="stat-icon bg-danger">
+
+                💰
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+        
+
+</section>
+
+<!-- Dashboard Section End -->
+
+<section class="pb-5">
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm p-4">
+                    <h5 class="mb-4">Revenue Overview</h5>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm p-4">
+                    <h5 class="mb-4">Orders by Status</h5>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Add Meal Section -->
+
+<section class="pb-5">
+
+    <div class="container">
+
+        <div class="card shadow border-0 p-4">
+
+            <h4 class="mb-4">
+
+                Add New Meal
+
+            </h4>
+
+            <form id="add-meal-form">
+
+                <div class="row g-3">
+
+                    <!-- Meal Name -->
+                    <div class="col-md-4">
+
+                        <input type="text"
+                               class="form-control"
+                               id="meal-name"
+                               placeholder="Meal Name">
+
+                    </div>
+
+                    <!-- Price -->
+                    <div class="col-md-3">
+
+                        <input type="number"
+                               class="form-control"
+                               id="meal-price"
+                               placeholder="Price">
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <select class="form-select"
+                        id="meal-category">
+
+        <option value="">
+            Select Category
+        </option>
+
+        <option value="rice">
+            Rice
+        </option>
+
+        <option value="fast-food">
+            Fast food
+        </option>
+
+        <option value="local">
+            Local Dishes
+        </option>
+
+        <option value="cake">
+            Cakes
+        </option>
+
+    </select>
+
+</div>
+
+                    <!-- Image URL -->
+                    <div class="col-md-5">
+
+                        <input type="file"
+                               class="form-control"
+                               id="meal-image"
+                               accept="image/*">
+
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-dark mt-4">
+
+                    Add Meal
+
+                </button>
+
+                <div id="meal-message"
+                     class="mt-3 fw-bold">
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Meals Management Section -->
+
+<section class="pb-5">
+
+    <div class="container">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body">
+
+                <h4 class="mb-4">
+
+                    Manage Meals
+
+                </h4>
+
+                <div id="admin-meals-container">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Admin Orders Section Start -->
+
+<section class="pb-5">
+
+    <div class="container">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body">
+
+                <h4 class="mb-4">
+                    All Customer Orders
+                </h4>
+
+                <div id="admin-orders-container">
+
+                </div>
+                
+                <div id="admin-pagination" class="text-center mt-4"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Admin Orders Section End -->
+
+
+<!-- Edit Meal Modal -->
+
+<div class="modal fade"
+     id="editMealModal"
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Edit Meal
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="edit-meal-form">
+
+                    <input type="hidden"
+                           id="edit-meal-id">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Meal Name
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="edit-meal-name">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Price
+
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               id="edit-meal-price">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Image URL
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="edit-meal-image">
+
+                    </div>
+
+                    <button class="btn btn-dark w-100">
+
+                        Save Changes
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Footer Start -->
+
+<footer class="premium-footer text-white pt-5 pb-4">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-3 col-md-6">
+
+                <h3 class="footer-logo">
+                    ESTEESBITES
+                </h3>
+
+                <p class="footer-text">
+                    Delicious meals delivered fast,
+                    fresh, and affordable.
+                </p>
+
+                <div class="footer-socials">
+
+                    <a href="#">f</a>
+                    <a href="#">◎</a>
+                    <a href="tel:+233594909546">☏</a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Quick Links
+                </h5>
+
+                <ul class="list-unstyled footer-links">
+
+                    <li><a href="index.html">› Home</a></li>
+                    <li><a href="menu.html">› Menu</a></li>
+                    <li><a href="about.html">› About</a></li>
+                    <li><a href="cart.html">› Cart</a></li>
+
+                </ul>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Contact
+                </h5>
+
+                <p class="footer-text">
+                    ✉ info@esteesbites.com
+                </p>
+
+                <p class="footer-text">
+                    ☎ +233 59 490 9546
+                </p>
+
+                <p class="footer-text">
+                    📍 Ghana
+                </p>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Opening Hours
+                </h5>
+
+                <p class="footer-text">
+                    🕒 Mon - Sun
+                </p>
+
+                <p class="footer-text">
+                    8:00 AM - 10:00 PM
+                </p>
+
+            </div>
+
+        </div>
+
+        <hr class="footer-line">
+
+        <div class="text-center">
+
+            <p class="mb-0 footer-copy">
+                © 2026 ESTEESBITES. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- Footer End -->
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>

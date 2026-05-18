@@ -1,0 +1,929 @@
+/* =========================
+   GLOBAL THEME
+========================= */
+
+:root{
+    --primary-color: #ff7a00;
+    --secondary-color: #111111;
+    --light-bg: #f8f9fa;
+    --dark-bg: #121212;
+    --text-dark: #222;
+    --white: #ffffff;
+    --radius: 18px;
+    --transition: 0.3s ease;
+}
+
+*{
+    scroll-behavior: smooth;
+}
+
+body{
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    padding: 15px 0;
+}
+
+.navbar-brand{
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--primary-color) !important;
+}
+
+.nav-link{
+    font-weight: 500;
+    margin-left: 10px;
+    transition: var(--transition);
+}
+
+.nav-link:hover{
+    color: var(--primary-color) !important;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+    transition: var(--transition);
+}
+
+.btn:hover{
+    transform: translateY(-2px);
+}
+
+.btn-dark{
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 30px;
+    padding: 10px 24px;
+}
+
+.btn-dark:hover{
+    background-color: var(--primary-color);
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero-section{
+    min-height: 100vh;
+    background-color: #333;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-section::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+}
+
+.hero-section .container{
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================
+   MODERN HERO SECTION
+========================= */
+
+.hero-section{
+    min-height: 100vh;
+    background:
+        linear-gradient(
+            rgba(0,0,0,0.7),
+            rgba(0,0,0,0.7)
+        ),
+        url("images/hero-bg.jpg");
+
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0;
+}
+
+.hero-image{
+    max-width: 500px;
+    animation: floatImage 3s ease-in-out infinite;
+}
+
+@keyframes floatImage{
+
+    0%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(-15px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card{
+    border: none;
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.card:hover{
+    transform: translateY(-5px);
+}
+
+.card img{
+    height: 220px;
+    object-fit: cover;
+}
+
+/* =========================
+   FORMS
+========================= */
+
+.form-control,
+.form-select{
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.form-control:focus,
+.form-select:focus{
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255,122,0,0.2);
+}
+
+/* =========================
+   ORDER TRACKING
+========================= */
+
+.tracking-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.tracking-step{
+    text-align: center;
+    flex: 1;
+    position: relative;
+}
+
+.circle{
+    width: 60px;
+    height: 60px;
+    background-color: #dee2e6;
+    border-radius: 50%;
+    line-height: 60px;
+    margin: auto;
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
+}
+
+.completed .circle{
+    background-color: #198754;
+    color: white;
+}
+
+.active .circle{
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.tracking-step p{
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.dark-mode{
+    background-color: var(--dark-bg);
+    color: white;
+}
+
+.dark-mode .card{
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.dark-mode .table{
+    color: white;
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select,
+.dark-mode .form-control,
+.dark-mode .form-select{
+    background-color: #2c2c2c;
+    color: white;
+    border: 1px solid #555;
+}
+
+.dark-mode input::placeholder{
+    color: #ccc;
+}
+
+.dark-mode footer{
+    background-color: black;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+    .tracking-wrapper{
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .navbar-nav{
+        text-align: center;
+    }
+
+    .nav-link{
+        margin-left: 0;
+    }
+
+}
+
+/* =========================
+   MODERN MENU CARDS
+========================= */
+
+.menu-card{
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.4s ease;
+    background-color: white;
+}
+
+.menu-card:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.menu-image{
+    height: 240px;
+    object-fit: cover;
+    transition: 0.4s ease;
+}
+
+.menu-card:hover .menu-image{
+    transform: scale(1.05);
+}
+
+.menu-card .card-body{
+    padding: 25px;
+}
+
+.menu-card .card-title{
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   ADMIN DASHBOARD
+========================= */
+
+.admin-stat-card{
+    border-radius: 20px;
+    transition: 0.3s ease;
+}
+
+.admin-stat-card:hover{
+    transform: translateY(-5px);
+}
+
+.stat-icon{
+    width: 65px;
+    height: 65px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    color: white;
+}
+
+/* =========================
+   ADMIN TABLE
+========================= */
+
+.table{
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.table thead{
+    background-color: #111;
+    color: white;
+}
+
+.table tbody tr{
+    transition: 0.2s ease;
+}
+
+.table tbody tr:hover{
+    background-color: rgba(255,122,0,0.08);
+}
+
+/* =========================
+   MODERN CART PAGE
+========================= */
+
+.cart-item-img{
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.modern-quantity-input{
+    max-width: 90px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+.remove-btn{
+    border-radius: 25px;
+    padding: 6px 14px;
+}
+
+#cart-items tr{
+    transition: 0.3s ease;
+}
+
+#cart-items tr:hover{
+    background-color: rgba(255,122,0,0.05);
+}
+
+/* =========================
+   MODERN CHECKOUT
+========================= */
+
+.checkout-card,
+.checkout-summary-card{
+    border-radius: 24px;
+    border: none;
+    background-color: white;
+}
+
+.checkout-card h3,
+.checkout-summary-card h4{
+    font-weight: 700;
+}
+
+.checkout-btn{
+    border-radius: 16px;
+    padding: 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.checkout-summary-card hr{
+    opacity: 0.1;
+}
+
+.checkout-summary-card .d-flex{
+    font-size: 1rem;
+}
+
+.checkout-summary-card strong{
+    font-weight: 700;
+}
+
+/* =========================
+   MODERN ORDERS PAGE
+========================= */
+
+.order-card{
+    border-radius: 22px;
+    border: none;
+    transition: 0.3s ease;
+    overflow: hidden;
+}
+
+.order-card:hover{
+    transform: translateY(-5px);
+}
+
+.order-status-badge{
+    background-color: #ff7a00;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+}
+
+.order-items-list li{
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding-bottom: 10px;
+}
+
+.order-items-list li:last-child{
+    border-bottom: none;
+}
+
+.order-card .card-body{
+    padding: 28px;
+}
+
+.order-items-list{
+    margin-top: 10px;
+}
+
+.order-card hr{
+    opacity: 0.1;
+    margin: 18px 0;
+}
+
+/* =========================
+   PREMIUM NAVBAR
+========================= */
+
+.custom-navbar{
+    background: rgba(15,15,15,0.88);
+    backdrop-filter: blur(12px);
+    padding: 14px 0;
+    transition: 0.3s ease;
+}
+
+.custom-navbar .navbar-brand{
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.custom-navbar .nav-link{
+    position: relative;
+    font-weight: 500;
+    margin-left: 14px;
+    transition: 0.3s ease;
+}
+
+.custom-navbar .nav-link::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover::after{
+    width: 100%;
+}
+
+.custom-navbar .nav-link:hover{
+    color: var(--primary-color) !important;
+}
+
+/* Cart badge */
+#cart-count{
+    font-size: 0.75rem;
+    padding: 5px 8px;
+}
+
+.register-btn{
+    background-color: var(--primary-color);
+    color: white !important;
+    border-radius: 25px;
+    padding: 8px 18px !important;
+}
+
+.register-btn:hover{
+    background-color: white;
+    color: var(--primary-color) !important;
+}
+
+#logout-btn{
+    border-radius: 25px;
+    padding: 8px 18px;
+}
+
+#dark-mode-toggle{
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+}
+
+/* =========================
+   TOAST NOTIFICATIONS
+========================= */
+
+#toast-container{
+    position: fixed;
+    top: 90px;
+    right: 25px;
+    z-index: 9999;
+}
+
+.toast-message{
+    min-width: 260px;
+    margin-bottom: 12px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+.toast-success{
+    background-color: #198754;
+}
+
+.toast-error{
+    background-color: #dc3545;
+}
+
+.toast-warning{
+    background-color: #ff7a00;
+}
+
+@keyframes slideIn{
+    from{
+        transform: translateX(120%);
+        opacity: 0;
+    }
+
+    to{
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut{
+    to{
+        opacity: 0;
+        transform: translateX(120%);
+    }
+}
+
+/* =========================
+   EMPTY STATES
+========================= */
+
+.empty-state{
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon{
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.empty-state h4{
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.empty-state p{
+    color: #777;
+    margin-bottom: 25px;
+}
+
+/* =========================
+   PREMIUM FOOTER
+========================= */
+
+.premium-footer{
+    background: #0f0f0f;
+}
+
+.footer-logo{
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.footer-title{
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.footer-text{
+    color: rgba(255,255,255,0.7);
+    line-height: 1.8;
+}
+
+.footer-links li{
+    margin-bottom: 12px;
+}
+
+.footer-links a{
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.footer-links a:hover{
+    color: var(--primary-color);
+    padding-left: 5px;
+}
+
+.footer-line{
+    border-color: rgba(255,255,255,0.1);
+    margin: 40px 0 20px;
+}
+
+.footer-copy{
+    color: rgba(255,255,255,0.6);
+}
+
+/* =========================
+   SMOOTH PAGE ANIMATIONS
+========================= */
+
+section,
+.card,
+footer{
+    animation: fadeUp 0.6s ease both;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   MENU FILTERS
+========================= */
+
+.filter-btn{
+    margin: 5px;
+    border-radius: 30px;
+    padding: 10px 22px;
+    transition: 0.3s ease;
+}
+
+.active-filter{
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* =========================
+   MOBILE OPTIMIZATION
+========================= */
+
+@media(max-width:768px){
+
+    /* Hero */
+    .hero-section{
+        text-align: center;
+        padding: 120px 20px 80px;
+    }
+
+    .hero-section h1{
+        font-size: 2.4rem;
+    }
+
+    .hero-image{
+        max-width: 320px;
+        margin-top: 40px;
+    }
+
+    /* Navbar */
+    .navbar-nav{
+        padding-top: 20px;
+        gap: 10px;
+    }
+
+    .navbar .btn{
+        width: 100%;
+    }
+
+    /* Cards */
+    .menu-card{
+        margin-bottom: 20px;
+    }
+
+    /* Checkout */
+    .checkout-card,
+    .checkout-summary-card{
+        margin-bottom: 20px;
+    }
+
+    /* Tables */
+    .table{
+        font-size: 0.9rem;
+    }
+
+    /* Admin */
+    .admin-stat-card{
+        margin-bottom: 20px;
+    }
+
+    /* Empty states */
+    .empty-icon{
+        font-size: 55px;
+    }
+
+    /* Buttons */
+    .btn{
+        font-size: 0.95rem;
+    }
+
+}
+
+/* =========================
+   MODERN MENU PAGE
+========================= */
+
+.menu-page-section{
+    background: linear-gradient(
+        180deg,
+        #ffffff,
+        #f8f9fa
+    );
+}
+
+.menu-small-title{
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.3rem;
+    font-style: italic;
+}
+
+.menu-main-title{
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-top: 10px;
+}
+
+.menu-divider{
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-top: 15px;
+}
+
+.filter-btn{
+    margin: 8px;
+    border-radius: 30px;
+    padding: 12px 34px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #111;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.filter-btn:hover,
+.active-filter{
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+    border-color: var(--secondary-color) !important;
+}
+
+/* =========================
+   PREMIUM FOOTER UPGRADE
+========================= */
+
+.premium-footer{
+    background: linear-gradient(
+        135deg,
+        #0b0b0b,
+        #171717
+    );
+}
+
+.footer-logo{
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+.footer-title{
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.footer-text{
+    color: rgba(255,255,255,0.72);
+    line-height: 1.8;
+}
+
+.footer-links li{
+    margin-bottom: 10px;
+}
+
+.footer-links a{
+    color: rgba(255,255,255,0.72);
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.footer-links a:hover{
+    color: var(--primary-color);
+    padding-left: 6px;
+}
+
+.footer-socials{
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.footer-socials a{
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.footer-socials a:hover{
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.footer-line{
+    border-color: rgba(255,255,255,0.12);
+    margin: 40px 0 18px;
+}
+
+.footer-copy{
+    color: rgba(255,255,255,0.65);
+}
+
+/* =========================
+   ABOUT PAGE
+========================= */
+
+.about-icon{
+    font-size: 55px;
+}
+
+.chef-card{
+    background-color: white;
+    border-left: 5px solid var(--primary-color);
+}
+
+/* =========================
+   CHEF PROFILE
+========================= */
+
+.chef-profile-card{
+    background-color: white;
+}
+
+.chef-image{
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--primary-color);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* Auth pages footer spacing */
+
+.auth-page footer{
+    margin-top: 60px;
+}

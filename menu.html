@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menu | ESTEESBITES</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+   <!-- Navbar Start -->
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
+
+    <div class="container">
+
+        <a class="navbar-brand" href="index.html">
+            ESTEESBITES
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                <!-- Main Links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="menu.html">
+                        Menu
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">
+                        About
+                    </a>
+                </li>
+
+                <!-- Customer Links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">
+                        Cart
+                        <span class="badge bg-danger" id="cart-count">
+                            0
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="orders.html">
+                        Orders
+                    </a>
+                </li>
+
+                <!-- Guest Links -->
+                <li class="nav-item" id="login-link">
+                    <a class="nav-link" href="login.html">
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item" id="register-link">
+                    <a class="nav-link register-btn" href="register.html">
+                        Register
+                    </a>
+                </li>
+
+                <li class="nav-item d-none" id="admin-link">
+                    <a class="nav-link" href="admin.html">
+                        Admin
+                    </a>
+                </li>
+
+                <!-- Logged-in User -->
+                <li class="nav-item d-none" id="user-info">
+                    <span class="nav-link fw-bold" id="username"></span>
+                </li>
+
+                
+
+                <li class="nav-item d-none" id="logout-item">
+                    <button class="btn btn-danger btn-sm ms-lg-2" id="logout-btn">
+                        Logout
+                    </button>
+                </li>
+
+                <!-- Dark Mode -->
+                <li class="nav-item">
+                    <button class="btn btn-outline-light btn-sm ms-lg-2"
+                            id="dark-mode-toggle">
+                        🌙
+                    </button>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- Navbar End -->
+
+ 
+
+<!-- Menu Intro Start -->
+
+<section class="menu-page-section py-5">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="menu-small-title">
+                Our Menu
+            </span>
+
+            <h2 class="menu-main-title">
+                Delicious Meals
+            </h2>
+
+            <div class="menu-divider">
+                🍴
+            </div>
+
+        </div>
+
+        <!-- Menu Filters -->
+        <div class="text-center mb-5">
+
+            <button class="btn filter-btn active-filter"
+                    data-category="all">
+                All
+            </button>
+
+            <button class="btn filter-btn"
+                    data-category="rice">
+                Rice
+            </button>
+
+            <button class="btn filter-btn"
+                    data-category="local">
+                Local Dishes
+            </button>
+
+            <button class="btn filter-btn"
+                    data-category="fast-food">
+                Fast Food
+            </button>
+
+            <button class="btn filter-btn"
+                    data-category="cake">
+                Cakes
+            </button>
+
+        </div>
+
+        <!-- Meals Container -->
+        <div class="row g-4" id="meals-container">
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Menu Intro End -->
+
+<!-- Menu Section End -->
+
+<!-- Footer Start -->
+
+<footer class="premium-footer text-white pt-5 pb-4">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-3 col-md-6">
+
+                <h3 class="footer-logo">
+                    ESTEESBITES
+                </h3>
+
+                <p class="footer-text">
+                    Delicious meals delivered fast,
+                    fresh, and affordable.
+                </p>
+
+                <div class="footer-socials">
+
+                    <a href="#">f</a>
+                    <a href="#">◎</a>
+                    <a href="tel:+233594909546">☏</a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Quick Links
+                </h5>
+
+                <ul class="list-unstyled footer-links">
+
+                    <li><a href="index.html">› Home</a></li>
+                    <li><a href="menu.html">› Menu</a></li>
+                    <li><a href="about.html">› About</a></li>
+                    <li><a href="cart.html">› Cart</a></li>
+
+                </ul>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Contact
+                </h5>
+
+                <p class="footer-text">
+                    ✉ info@esteesbites.com
+                </p>
+
+                <p class="footer-text">
+                    ☎ +233 59 490 9546
+                </p>
+
+                <p class="footer-text">
+                    📍 Ghana
+                </p>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-title">
+                    Opening Hours
+                </h5>
+
+                <p class="footer-text">
+                    🕒 Mon - Sun
+                </p>
+
+                <p class="footer-text">
+                    8:00 AM - 10:00 PM
+                </p>
+
+            </div>
+
+        </div>
+
+        <hr class="footer-line">
+
+        <div class="text-center">
+
+            <p class="mb-0 footer-copy">
+                © 2026 ESTEESBITES. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- Footer End -->
+
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>
