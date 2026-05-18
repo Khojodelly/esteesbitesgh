@@ -846,9 +846,9 @@ app.get("/api/admin/analytics", authenticateToken, (req, res) => {
 
 // START SERVER
 
-app.listen(PORT, () => {
+app.listen(port, () => {
 
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${port}`);
 
 });
 
