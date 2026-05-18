@@ -1,4 +1,5 @@
 require("dotenv").config();
+const port = process.env.PORT || 5000;
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
