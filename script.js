@@ -681,7 +681,13 @@ if (mealsContainer) {
 
                 let imageUrl = meal.image;
 
-if (imageUrl.startsWith("http")) {
+if (imageUrl.startsWith("http://localhost:5000")) {
+    imageUrl = imageUrl.replace(
+        "http://localhost:5000",
+        "https://esteesbites-backend.onrender.com"
+    );
+}
+else if (imageUrl.startsWith("http")) {
     imageUrl = meal.image;
 }
 else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
@@ -1697,7 +1703,13 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
 
             let imageUrl = meal.image;
 
-if (imageUrl.startsWith("http")) {
+if (imageUrl.startsWith("http://localhost:5000")) {
+    imageUrl = imageUrl.replace(
+        "http://localhost:5000",
+        "https://esteesbites-backend.onrender.com"
+    );
+}
+else if (imageUrl.startsWith("http")) {
     imageUrl = meal.image;
 }
 else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
@@ -1740,7 +1752,13 @@ else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
 
                 let imageUrl = meal.image;
 
-if (imageUrl.startsWith("http")) {
+if (imageUrl.startsWith("http://localhost:5000")) {
+    imageUrl = imageUrl.replace(
+        "http://localhost:5000",
+        "https://esteesbites-backend.onrender.com"
+    );
+}
+else if (imageUrl.startsWith("http")) {
     imageUrl = meal.image;
 }
 else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
