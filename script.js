@@ -1693,177 +1693,128 @@ const adminMealsContainer =
 if (adminMealsContainer) {
 
     adminMealsContainer.innerHTML = `
-    <div class="loading-box">
-        <div class="loading-spinner"></div>
-        Loading meals...
-    </div>
-`;
-fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
-})
-
-        .then(response => response.json())
-
-        .then(meals => {
-
-           let imageUrl = meal.image;
-
-if (imageUrl.includes("netlify.app/images/")) {
-    const fileName = imageUrl.split("/").pop();
-    imageUrl =
-        `https://esteesbites-backend.onrender.com/uploads/${fileName}`;
-}
-else if (imageUrl.startsWith("http://localhost:5000")) {
-    imageUrl = imageUrl.replace(
-        "http://localhost:5000",
-        "https://esteesbites-backend.onrender.com"
-    );
-}
-else if (imageUrl.startsWith("http")) {
-    imageUrl = meal.image;
-}
-else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
-    imageUrl =
-        `https://esteesbites-backend.onrender.com${imageUrl}`;
-}
-else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
-    imageUrl =
-        `https://esteesbites-backend.onrender.com/${imageUrl}`;
-}
-
-            if (meals.length === 0) {
-
-                adminMealsContainer.innerHTML = `
-
-    <div class="empty-state">
-
-        <div class="empty-icon">
-            🍔
+        <div class="loading-box">
+            <div class="loading-spinner"></div>
+            Loading meals...
         </div>
+    `;
 
-        <h4>
-            No meals available
-        </h4>
+    fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+    })
 
-        <p>
-            Start by adding your first meal.
-        </p>
+    .then(response => {
 
-    </div>
+        if (!response.ok) {
+            throw new Error("Failed to load meals");
+        }
 
-`;
+        return response.json();
 
-                return;
+    })
 
+    .then(meals => {
+
+        if (meals.length === 0) {
+
+            adminMealsContainer.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🍔</div>
+                    <h4>No meals available</h4>
+                    <p>Start by adding your first meal.</p>
+                </div>
+            `;
+
+            return;
+
+        }
+
+        let mealsHTML = "";
+
+        meals.forEach(meal => {
+
+            let imageUrl = meal.image;
+
+            if (imageUrl.includes("netlify.app/images/")) {
+                const fileName = imageUrl.split("/").pop();
+                imageUrl =
+                    `https://esteesbites-backend.onrender.com/uploads/${fileName}`;
+            }
+            else if (imageUrl.startsWith("http://localhost:5000")) {
+                imageUrl =
+                    imageUrl.replace(
+                        "http://localhost:5000",
+                        "https://esteesbites-backend.onrender.com"
+                    );
+            }
+            else if (imageUrl.startsWith("http")) {
+                imageUrl = meal.image;
+            }
+            else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
+                imageUrl =
+                    `https://esteesbites-backend.onrender.com${imageUrl}`;
+            }
+            else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
+                imageUrl =
+                    `https://esteesbites-backend.onrender.com/${imageUrl}`;
             }
 
-            let mealsHTML = "";
+            mealsHTML += `
+                <div class="d-flex justify-content-between align-items-center border-bottom py-3">
 
-            meals.forEach(meal => {
+                    <div class="d-flex align-items-center gap-3">
 
-                let imageUrl = meal.image;
+                        <img src="${imageUrl}"
+                             width="80"
+                             height="80"
+                             style="object-fit:cover;border-radius:8px;">
 
-if (imageUrl.includes("netlify.app/images/")) {
-    const fileName = imageUrl.split("/").pop();
-    imageUrl =
-        `https://esteesbites-backend.onrender.com/uploads/${fileName}`;
-}
-else if (imageUrl.startsWith("http://localhost:5000")) {
-    imageUrl = imageUrl.replace(
-        "http://localhost:5000",
-        "https://esteesbites-backend.onrender.com"
-    );
-}
-else if (imageUrl.startsWith("http")) {
-    imageUrl = meal.image;
-}
-else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
-    imageUrl =
-        `https://esteesbites-backend.onrender.com${imageUrl}`;
-}
-else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
-    imageUrl =
-        `https://esteesbites-backend.onrender.com/${imageUrl}`;
-}
-
-
-                mealsHTML += `
-
-                    <div class="d-flex
-                                justify-content-between
-                                align-items-center
-                                border-bottom
-                                py-3">
-
-                        <div class="d-flex align-items-center gap-3">
-
-                            <img src="${imageUrl}"
-                                 width="80"
-                                 height="80"
-                                 style="object-fit:cover;border-radius:8px;">
-
-                            <div>
-
-                                <h6 class="mb-1">
-
-                                    ${meal.name}
-
-                                </h6>
-
-                                <small>
-
-                                    GH₵ ${meal.price}
-
-                                </small>
-
-                            </div>
-
-                        </div>
-
-                    
-                        <div class="d-flex gap-2">
-
-                        <button class="btn btn-primary edit-meal-btn"
-                        data-id="${meal.id}"
-                        data-name="${meal.name}"
-                        data-price="${meal.price}"
-                        data-image="${imageUrl}">
-
-                        Edit
-
-                        </button>
-                        <button class="btn btn-danger delete-meal-btn"
-                        data-id="${meal.id}">
-
-                        Delete
-
-                        </button>
-
+                        <div>
+                            <h6 class="mb-1">${meal.name}</h6>
+                            <small>GH₵ ${meal.price}</small>
                         </div>
 
                     </div>
 
-                `;
+                    <div class="d-flex gap-2">
 
-            });
+                        <button class="btn btn-primary edit-meal-btn"
+                                data-id="${meal.id}"
+                                data-name="${meal.name}"
+                                data-price="${meal.price}"
+                                data-image="${imageUrl}">
+                            Edit
+                        </button>
 
-            adminMealsContainer.innerHTML = mealsHTML;
+                        <button class="btn btn-danger delete-meal-btn"
+                                data-id="${meal.id}">
+                            Delete
+                        </button>
 
-        })
+                    </div>
 
-        .catch(error => {
-
-            console.log(error);
-
-            adminMealsContainer.innerHTML = `
-                <div class="alert alert-danger">
-                    Failed to load meals.
                 </div>
             `;
 
         });
+
+        adminMealsContainer.innerHTML = mealsHTML;
+
+    })
+
+    .catch(error => {
+
+        console.log(error);
+
+        adminMealsContainer.innerHTML = `
+            <div class="alert alert-danger">
+                Failed to load meals.
+            </div>
+        `;
+
+    });
 
 }
 
