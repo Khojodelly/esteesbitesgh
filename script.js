@@ -494,72 +494,65 @@ if (checkoutForm) {
 
         try {
 
-            const response = await fetch(
-                "https://esteesbites-backend.onrender.com/api/orders",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-
-                        user_id: loggedUser.id,
-                        email: loggedUser.email,
-                        items: cart,
-                        total,
-                        fullname,
-                        phone,
-                        address,
-                        city,
-                        payment_method: paymentMethod
-
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok) {
-
-                formMessage.textContent = data.message;
-                return;
-
-            }
-
-            // =========================
-            // SUCCESS
-            // =========================
-
-            const toastType = data.emailError ? "warning" : "success";
-            const toastMessage = data.emailError
-                ? "Order placed, but confirmation email could not be sent."
-                : "Order placed successfully 🎉";
-
-            showToast(toastMessage, toastType);
-
-            successMessage.textContent = data.message;
-            successMessage.classList.remove("d-none");
-
-            // Clear cart
-            localStorage.removeItem("cart");
-
-            // Reset form
-            checkoutForm.reset();
-
-            // Redirect after 2 seconds
-            setTimeout(() => {
-                window.location.href = "orders.html";
-            }, 2000);
-
+    const response = await fetch(
+        "https://esteesbites-backend.onrender.com/api/orders",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: loggedUser.id,
+                email: loggedUser.email,
+                items: cart,
+                total,
+                fullname,
+                phone,
+                address,
+                city,
+                payment_method: paymentMethod
+            })
         }
+      );
 
-        catch (error) {
+      let data = {};
 
-            console.log(error);
-            formMessage.textContent =
-                "Something went wrong. Try again.";
+     try {
+        data = await response.json();
+     } catch (jsonError) {
+        data = {};
+     }
 
-        }
+     if (!response.ok) {
+        formMessage.textContent =
+            data.message || "Order failed. Try again.";
+        return;
+     }
+
+     showToast(
+        "Order placed successfully 🎉",
+        "success"
+     );
+
+     successMessage.textContent =
+        data.message || "Your order has been placed successfully.";
+     successMessage.classList.remove("d-none");
+
+     localStorage.removeItem("cart");
+     checkoutForm.reset();
+
+     setTimeout(() => {
+        window.location.href = "orders.html";
+     }, 2000);
+
+} catch (error) {
+
+    console.log(error);
+
+    formMessage.textContent =
+        "Something went wrong. Try again.";
+
+}
 
     });
 
