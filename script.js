@@ -681,16 +681,20 @@ if (mealsContainer) {
 
                 let imageUrl = meal.image;
 
-    if (imageUrl.startsWith("/uploads")) {
-        imageUrl =
-            `https://esteesbites-backend.onrender.com${imageUrl}`;
-    }
+if (imageUrl.startsWith("http://localhost:5000")) {
+    imageUrl = imageUrl.replace(
+        "http://localhost:5000",
+        "https://esteesbites-backend.onrender.com"
+    );
+}
 
-    if (imageUrl.startsWith("/images")) {
-        imageUrl =
-            `https://esteesbites-backend.onrender.com${imageUrl}`;
-    }
+if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
+    imageUrl = `https://esteesbites-backend.onrender.com${imageUrl}`;
+}
 
+if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
+    imageUrl = `https://esteesbites-backend.onrender.com/${imageUrl}`;
+}
 
                 mealsContainer.innerHTML += `
 
@@ -1698,15 +1702,20 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
 
             let imageUrl = meal.image;
 
-    if (imageUrl.startsWith("/uploads")) {
-        imageUrl =
-            `https://esteesbites-backend.onrender.com${imageUrl}`;
-    }
+if (imageUrl.startsWith("http://localhost:5000")) {
+    imageUrl = imageUrl.replace(
+        "http://localhost:5000",
+        "https://esteesbites-backend.onrender.com"
+    );
+}
 
-    if (imageUrl.startsWith("/images")) {
-        imageUrl =
-            `https://esteesbites-backend.onrender.com${imageUrl}`;
-    }
+if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
+    imageUrl = `https://esteesbites-backend.onrender.com${imageUrl}`;
+}
+
+if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
+    imageUrl = `https://esteesbites-backend.onrender.com/${imageUrl}`;
+}
 
 
             if (meals.length === 0) {
@@ -1741,9 +1750,19 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
 
                 let imageUrl = meal.image;
 
-    if (imageUrl.startsWith("/uploads")) {
-        imageUrl =
-            `https://esteesbites-backend.onrender.com${imageUrl}`;
+    if (imageUrl.startsWith("http://localhost:5000")) {
+        imageUrl = imageUrl.replace(
+            "http://localhost:5000",
+            "https://esteesbites-backend.onrender.com"
+        );
+    }
+
+    if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
+        imageUrl = `https://esteesbites-backend.onrender.com${imageUrl}`;
+    }
+
+    if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
+        imageUrl = `https://esteesbites-backend.onrender.com/${imageUrl}`;
     }
 
     if (imageUrl.startsWith("/images")) {
