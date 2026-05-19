@@ -681,7 +681,12 @@ if (mealsContainer) {
 
                 let imageUrl = meal.image;
 
-if (imageUrl.startsWith("http://localhost:5000")) {
+if (imageUrl.includes("netlify.app/images/")) {
+    const fileName = imageUrl.split("/").pop();
+    imageUrl =
+        `https://esteesbites-backend.onrender.com/uploads/${fileName}`;
+}
+else if (imageUrl.startsWith("http://localhost:5000")) {
     imageUrl = imageUrl.replace(
         "http://localhost:5000",
         "https://esteesbites-backend.onrender.com"
@@ -691,10 +696,12 @@ else if (imageUrl.startsWith("http")) {
     imageUrl = meal.image;
 }
 else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
-    imageUrl = `https://esteesbites-backend.onrender.com${imageUrl}`;
+    imageUrl =
+        `https://esteesbites-backend.onrender.com${imageUrl}`;
 }
 else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
-    imageUrl = `https://esteesbites-backend.onrender.com/${imageUrl}`;
+    imageUrl =
+        `https://esteesbites-backend.onrender.com/${imageUrl}`;
 }
 
                 mealsContainer.innerHTML += `
@@ -1701,9 +1708,14 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
 
         .then(meals => {
 
-            let imageUrl = meal.image;
+           let imageUrl = meal.image;
 
-if (imageUrl.startsWith("http://localhost:5000")) {
+if (imageUrl.includes("netlify.app/images/")) {
+    const fileName = imageUrl.split("/").pop();
+    imageUrl =
+        `https://esteesbites-backend.onrender.com/uploads/${fileName}`;
+}
+else if (imageUrl.startsWith("http://localhost:5000")) {
     imageUrl = imageUrl.replace(
         "http://localhost:5000",
         "https://esteesbites-backend.onrender.com"
@@ -1713,12 +1725,13 @@ else if (imageUrl.startsWith("http")) {
     imageUrl = meal.image;
 }
 else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
-    imageUrl = `https://esteesbites-backend.onrender.com${imageUrl}`;
+    imageUrl =
+        `https://esteesbites-backend.onrender.com${imageUrl}`;
 }
 else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
-    imageUrl = `https://esteesbites-backend.onrender.com/${imageUrl}`;
+    imageUrl =
+        `https://esteesbites-backend.onrender.com/${imageUrl}`;
 }
-
 
             if (meals.length === 0) {
 
@@ -1752,7 +1765,12 @@ else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
 
                 let imageUrl = meal.image;
 
-if (imageUrl.startsWith("http://localhost:5000")) {
+if (imageUrl.includes("netlify.app/images/")) {
+    const fileName = imageUrl.split("/").pop();
+    imageUrl =
+        `https://esteesbites-backend.onrender.com/uploads/${fileName}`;
+}
+else if (imageUrl.startsWith("http://localhost:5000")) {
     imageUrl = imageUrl.replace(
         "http://localhost:5000",
         "https://esteesbites-backend.onrender.com"
@@ -1762,10 +1780,12 @@ else if (imageUrl.startsWith("http")) {
     imageUrl = meal.image;
 }
 else if (imageUrl.startsWith("/uploads") || imageUrl.startsWith("/images")) {
-    imageUrl = `https://esteesbites-backend.onrender.com${imageUrl}`;
+    imageUrl =
+        `https://esteesbites-backend.onrender.com${imageUrl}`;
 }
 else if (imageUrl.startsWith("uploads/") || imageUrl.startsWith("images/")) {
-    imageUrl = `https://esteesbites-backend.onrender.com/${imageUrl}`;
+    imageUrl =
+        `https://esteesbites-backend.onrender.com/${imageUrl}`;
 }
 
 
