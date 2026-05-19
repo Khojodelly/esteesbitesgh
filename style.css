@@ -106,7 +106,7 @@ body{
             rgba(0,0,0,0.7),
             rgba(0,0,0,0.7)
         ),
-        url("images/hero-bg.jpg");
+        url("images/chef.jpg");
 
     background-size: cover;
     background-position: center;
@@ -903,6 +903,13 @@ footer{
 .chef-card{
     background-color: white;
     border-left: 5px solid var(--primary-color);
+}
+
+.img-fluid {
+    border-radius: 20px;
+    height: 300px;
+    width: 300px;
+    object-fit: cover;
 }
 
 /* =========================

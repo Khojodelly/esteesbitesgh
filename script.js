@@ -679,6 +679,19 @@ if (mealsContainer) {
 
             meals.forEach(meal => {
 
+                let imageUrl = meal.image;
+
+    if (imageUrl.startsWith("/uploads")) {
+        imageUrl =
+            `https://esteesbites-backend.onrender.com${imageUrl}`;
+    }
+
+    if (imageUrl.startsWith("/images")) {
+        imageUrl =
+            `https://esteesbites-backend.onrender.com${imageUrl}`;
+    }
+
+
                 mealsContainer.innerHTML += `
 
                     <div class="col-lg-3 col-md-6 menu-item"
@@ -686,7 +699,7 @@ if (mealsContainer) {
 
                         <div class="card menu-card shadow h-100">
 
-                            <img src="${meal.image}"
+                            <img src="${imageUrl}"
                                  class="card-img-top menu-image"
                                  alt="${meal.name}">
 
@@ -706,7 +719,7 @@ if (mealsContainer) {
                                         class="btn btn-dark w-100 add-to-cart"
                                         data-name="${meal.name}"
                                         data-price="${meal.price}"
-                                        data-image="${meal.image}">
+                                        data-image="${imageUrl}">
 
                                         Add to Cart
 
@@ -1683,6 +1696,19 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
 
         .then(meals => {
 
+            let imageUrl = meal.image;
+
+    if (imageUrl.startsWith("/uploads")) {
+        imageUrl =
+            `https://esteesbites-backend.onrender.com${imageUrl}`;
+    }
+
+    if (imageUrl.startsWith("/images")) {
+        imageUrl =
+            `https://esteesbites-backend.onrender.com${imageUrl}`;
+    }
+
+
             if (meals.length === 0) {
 
                 adminMealsContainer.innerHTML = `
@@ -1713,6 +1739,19 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
 
             meals.forEach(meal => {
 
+                let imageUrl = meal.image;
+
+    if (imageUrl.startsWith("/uploads")) {
+        imageUrl =
+            `https://esteesbites-backend.onrender.com${imageUrl}`;
+    }
+
+    if (imageUrl.startsWith("/images")) {
+        imageUrl =
+            `https://esteesbites-backend.onrender.com${imageUrl}`;
+    }
+
+
                 mealsHTML += `
 
                     <div class="d-flex
@@ -1723,7 +1762,7 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
 
                         <div class="d-flex align-items-center gap-3">
 
-                            <img src="${meal.image}"
+                            <img src="${imageUrl}"
                                  width="80"
                                  height="80"
                                  style="object-fit:cover;border-radius:8px;">
@@ -1753,7 +1792,7 @@ fetch("https://esteesbites-backend.onrender.com/api/admin/meals", {
                         data-id="${meal.id}"
                         data-name="${meal.name}"
                         data-price="${meal.price}"
-                        data-image="${meal.image}">
+                        data-image="${imageUrl}">
 
                         Edit
 
