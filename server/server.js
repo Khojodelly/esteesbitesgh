@@ -237,24 +237,23 @@ res.json({
 });
 
 // =========================
-// CREATE ORDER API (UPDATED)
+// CREATE ORDER API
 // =========================
 
 app.post("/api/orders", (req, res) => {
 
     const {
-    user_id,
-    items,
-    total,
-    fullname,
-    phone,
-    address,
-    city,
-    payment_method,
-    email
-} = req.body;
+        user_id,
+        items,
+        total,
+        fullname,
+        phone,
+        address,
+        city,
+        payment_method,
+        email
+    } = req.body;
 
-    // Validation
     if (
         !user_id ||
         !items ||
@@ -293,53 +292,52 @@ app.post("/api/orders", (req, res) => {
 
             if (err) {
                 console.log(err);
+
                 return res.status(500).json({
                     message: "Database error while creating order"
                 });
             }
 
-            // Send confirmation email
-const mailOptions = {
-    from: process.env.EMAIL_USER || "YOUR_EMAIL@gmail.com",
-    to: email,
-    subject: "ESTEESBITES Order Confirmation",
-    html: `
-        <h2>Thank you for your order!</h2>
+            // Respond to frontend immediately
+            res.json({
+                message: "Order placed successfully",
+                orderId: result.insertId
+            });
 
-        <p>Your order has been received successfully.</p>
+            // Send email in background
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: "ESTEESBITES Order Confirmation",
+                html: `
+                    <h2>Thank you for your order!</h2>
 
-        <p><strong>Order ID:</strong> #${result.insertId}</p>
+                    <p>Your order has been received successfully.</p>
 
-        <p><strong>Total:</strong> GH₵ ${total}</p>
+                    <p><strong>Order ID:</strong> #${result.insertId}</p>
 
-        <p><strong>Status:</strong> Pending</p>
+                    <p><strong>Total:</strong> GH₵ ${total}</p>
 
-        <br>
+                    <p><strong>Status:</strong> Pending</p>
 
-        <p>ESTEESBITES will prepare your meal soon.</p>
-    `
-};
+                    <br>
 
-transporter.sendMail(mailOptions, (emailErr) => {
+                    <p>ESTEESBITES will prepare your meal soon.</p>
+                `
+            };
 
-    if (emailErr) {
-        console.error("Email error:", emailErr);
+            transporter.sendMail(mailOptions, (emailErr) => {
 
-        return res.json({
-            message: "Order placed successfully, but confirmation email could not be sent.",
-            orderId: result.insertId,
-            emailError: emailErr.message
-        });
-    }
+                if (emailErr) {
+                    console.log("Email error:", emailErr.message);
+                } else {
+                    console.log("Order confirmation email sent");
+                }
 
-    res.json({
-        message: "Order placed successfully",
-        orderId: result.insertId
-    });
+            });
 
-});
-
-        });
+        }
+    );
 
 });
 
