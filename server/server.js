@@ -971,6 +971,53 @@ app.post("/api/payments/initialize", authenticateToken, async (req, res) => {
     }
 });
 
+// =========================
+// VERIFY PAYSTACK PAYMENT
+// Confirms if payment was successful
+// =========================
+
+app.get("/api/payments/verify/:reference", authenticateToken, async (req, res) => {
+    try {
+        const reference = req.params.reference;
+
+        // Send verification request to Paystack
+        const response = await axios.get(
+            `https://api.paystack.co/transaction/verify/${reference}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
+                }
+            }
+        );
+
+        const paymentData = response.data.data;
+
+        // Check payment status
+        if (paymentData.status === "success") {
+            return res.json({
+                message: "Payment verified successfully",
+                status: "success",
+                reference: paymentData.reference,
+                amount: paymentData.amount / 100,
+                transaction_id: paymentData.id
+            });
+        }
+
+        // Payment not successful
+        res.status(400).json({
+            message: "Payment not successful",
+            status: paymentData.status
+        });
+
+    } catch (error) {
+        console.error(error.response?.data || error.message);
+
+        res.status(500).json({
+            message: "Payment verification failed"
+        });
+    }
+});
+
 // START SERVER
 
 app.listen(port, () => {
