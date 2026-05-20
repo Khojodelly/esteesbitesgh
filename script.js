@@ -1284,11 +1284,25 @@ if (ordersContainer) {
             </div>
         `;
 
-        fetch(`https://esteesbites-backend.onrender.com/api/orders/${loggedUser.id}`)
+        // =========================
+// FETCH ORDERS FROM BACKEND
+// Requires logged-in user token
+// =========================
+
+const token = localStorage.getItem("token");
+
+fetch(`https://esteesbites-backend.onrender.com/api/orders/${loggedUser.id}`, {
+    method: "GET",
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+})
 
             .then(response => response.json())
 
             .then(orders => {
+                
+                console.log("ORDERS:", orders);
 
                 ordersContainer.innerHTML = "";
 
@@ -1310,7 +1324,14 @@ if (ordersContainer) {
 
                 orders.forEach(order => {
 
-                    const items = JSON.parse(order.items);
+                    // =========================
+                    // PARSE ORDER ITEMS SAFELY
+                    // Handles items saved as JSON string or array
+                    // =========================
+
+                    const items = typeof order.items === "string"
+                        ? JSON.parse(order.items)
+                        : order.items;
 
                     let mealsHTML = "";
 
