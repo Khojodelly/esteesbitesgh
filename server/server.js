@@ -751,19 +751,25 @@ function authenticateToken(
 }
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
-transporter.verify((err, success) => {
-    if (err) {
-        console.error("Email transporter configuration error:", err);
-    } else {
-        console.log("Email transporter is ready");
-    }
+transporter.verify((error, success) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("SMTP READY");
+  }
 });
 
 
