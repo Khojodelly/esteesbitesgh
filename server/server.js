@@ -9,6 +9,7 @@ const fs = require("fs");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 const JWT_SECRET = process.env.JWT_SECRET;
+const axios = require("axios");
 
 const db = require("./db");
 
@@ -367,6 +368,71 @@ app.get("/api/orders/:userId", (req, res) => {
 
     });
 
+});
+
+// =========================
+// CANCEL ORDER ROUTE
+// Users can cancel only pending orders
+// =========================
+
+app.put("/api/orders/:id/cancel", authenticateToken, (req, res) => {
+
+    const orderId = req.params.id;
+    const userId = req.user.id;
+
+    // Check if order belongs to logged in user
+    const checkSql = `
+        SELECT * FROM orders
+        WHERE id = ? AND user_id = ?
+    `;
+
+    db.query(checkSql, [orderId, userId], (err, results) => {
+
+        // Database error
+        if (err) {
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        // Order not found
+        if (results.length === 0) {
+            return res.status(404).json({
+                message: "Order not found"
+            });
+        }
+
+        const order = results[0];
+
+        // Only pending orders can be cancelled
+        if (order.status !== "Pending") {
+            return res.status(400).json({
+                message: "Order cannot be cancelled"
+            });
+        }
+
+        // Update order status
+        const updateSql = `
+            UPDATE orders
+            SET status = 'Cancelled'
+            WHERE id = ?
+        `;
+
+        db.query(updateSql, [orderId], (err) => {
+
+            // Update failed
+            if (err) {
+                return res.status(500).json({
+                    message: "Failed to cancel order"
+                });
+            }
+
+            // Success response
+            res.json({
+                message: "Order cancelled successfully"
+            });
+        });
+    });
 });
 
 
@@ -847,6 +913,63 @@ app.get("/api/admin/analytics", authenticateToken, (req, res) => {
 
 });
 
+// =========================
+// INITIALIZE PAYSTACK PAYMENT
+// Creates payment link for checkout
+// =========================
+
+app.post("/api/payments/initialize", authenticateToken, async (req, res) => {
+
+    try {
+
+        const { email, amount } = req.body;
+
+        // Validate request data
+        if (!email || !amount) {
+            return res.status(400).json({
+                message: "Email and amount are required"
+            });
+        }
+
+        // Convert amount to pesewas
+        // Example: GHS 50 => 5000
+        const amountInPesewas = amount * 100;
+
+        // Send request to Paystack
+        const response = await axios.post(
+            "https://api.paystack.co/transaction/initialize",
+            {
+                email,
+                amount: amountInPesewas,
+                currency: "GHS"
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        // Return Paystack payment link
+        res.json({
+            message: "Payment initialized successfully",
+            authorization_url: response.data.data.authorization_url,
+            reference: response.data.data.reference
+        });
+
+    } catch (error) {
+
+        // Handle errors
+        console.error(
+            error.response?.data || error.message
+        );
+
+        res.status(500).json({
+            message: "Failed to initialize payment"
+        });
+    }
+});
 
 // START SERVER
 

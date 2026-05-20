@@ -559,6 +559,62 @@ if (checkoutForm) {
 }
 
 // =========================
+// CANCEL ORDER FUNCTION
+// Allows user to cancel pending orders
+// =========================
+
+async function cancelOrder(orderId) {
+
+    // Confirmation alert
+    const confirmCancel = confirm(
+        "Are you sure you want to cancel this order?"
+    );
+
+    // Stop if user clicks cancel
+    if (!confirmCancel) return;
+
+    try {
+
+        // Send cancel request to backend
+        const response = await fetch(
+            `${API_URL}/api/orders/${orderId}/cancel`,
+            {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        // Convert response to JSON
+        const data = await response.json();
+
+        // =========================
+        // SHOW TOAST MESSAGE
+        // =========================
+
+        if (response.ok) {
+
+            showToast(data.message, "success");
+
+            // Reload orders
+            loadOrders();
+
+        } else {
+
+            showToast(data.message, "error");
+        }
+
+    } catch (error) {
+
+        // Handle request errors
+        console.error(error);
+
+        showToast("Failed to cancel order", "error");
+    }
+}
+
+// =========================
 // MENU SEARCH FUNCTION
 // =========================
 
@@ -1206,6 +1262,13 @@ if (ordersContainer) {
                                     <span class="badge order-status-badge">
                                         ${order.status}
                                     </span>
+
+                                       ${order.status === "Pending" ? `
+                                      <button class="btn btn-danger btn-sm mt-2" 
+                                      onclick="cancelOrder(${order.id})">
+                                        Cancel Order
+                                          </button>
+                                          ` : ""}
                                 </div>
 
                                 <div class="order-items-list">
@@ -1247,6 +1310,28 @@ if (ordersContainer) {
 
     }
 
+}
+
+// =========================
+// ORDER STATUS COLORS
+// =========================
+
+let statusColor = "gray";
+
+if (order.status === "Pending") {
+    statusColor = "orange";
+}
+else if (order.status === "Preparing") {
+    statusColor = "blue";
+}
+else if (order.status === "Out for delivery") {
+    statusColor = "purple";
+}
+else if (order.status === "Delivered") {
+    statusColor = "green";
+}
+else if (order.status === "Cancelled") {
+    statusColor = "red";
 }
 
 // =========================
@@ -1399,6 +1484,7 @@ function loadAdminOrders(page = 1){
                                 <option value="Preparing" ${order.status === "Preparing" ? "selected" : ""}>Preparing</option>
                                 <option value="On The Way" ${order.status === "On The Way" ? "selected" : ""}>On The Way</option>
                                 <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
+                                <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
                             </select>
                         </td>
                         <td>${new Date(order.created_at).toLocaleString()}</td>
