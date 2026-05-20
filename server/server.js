@@ -239,9 +239,10 @@ res.json({
 
 // =========================
 // CREATE ORDER API
+// Supports Paystack and Cash on Delivery
 // =========================
 
-app.post("/api/orders", (req, res) => {
+app.post("/api/orders", authenticateToken, async (req, res) => {
 
     const {
         user_id,
@@ -252,9 +253,11 @@ app.post("/api/orders", (req, res) => {
         address,
         city,
         payment_method,
-        email
+        email,
+        payment_reference
     } = req.body;
 
+    // Validate normal order fields
     if (
         !user_id ||
         !items ||
@@ -271,75 +274,124 @@ app.post("/api/orders", (req, res) => {
         });
     }
 
-    const sql = `
-        INSERT INTO orders 
-        (user_id, fullname, phone, address, city, payment_method, items, total)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    try {
 
-    db.query(
-        sql,
-        [
-            user_id,
-            fullname,
-            phone,
-            address,
-            city,
-            payment_method,
-            JSON.stringify(items),
-            total
-        ],
-        (err, result) => {
+        let paymentStatus = "Unpaid";
+        let transactionId = null;
+        let finalPaymentReference = null;
 
-            if (err) {
-                console.log(err);
+        // =========================
+        // PAYSTACK PAYMENT CHECK
+        // Verify payment before saving order
+        // =========================
 
-                return res.status(500).json({
-                    message: "Database error while creating order"
+        if (payment_method === "Paystack") {
+
+            // Paystack orders must have payment reference
+            if (!payment_reference) {
+                return res.status(400).json({
+                    message: "Payment reference is required"
                 });
             }
 
-            // Respond to frontend immediately
-            res.json({
-                message: "Order placed successfully",
-                orderId: result.insertId
-            });
+            // Verify payment with Paystack
+            const verifyResponse = await axios.get(
+                `https://api.paystack.co/transaction/verify/${payment_reference}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
+                    }
+                }
+            );
 
-            // Send email in background
-            const mailOptions = {
-                from: process.env.EMAIL_USER,
-                to: email,
-                subject: "ESTEESBITES Order Confirmation",
-                html: `
-                    <h2>Thank you for your order!</h2>
+            const paymentData = verifyResponse.data.data;
 
-                    <p>Your order has been received successfully.</p>
+            // Stop if payment was not successful
+            if (paymentData.status !== "success") {
+                return res.status(400).json({
+                    message: "Payment was not successful"
+                });
+            }
 
-                    <p><strong>Order ID:</strong> #${result.insertId}</p>
+            // Stop if paid amount does not match cart total
+            if (paymentData.amount / 100 !== Number(total)) {
+                return res.status(400).json({
+                    message: "Payment amount does not match order total"
+                });
+            }
 
-                    <p><strong>Total:</strong> GH₵ ${total}</p>
+            // Payment is verified
+            paymentStatus = "Paid";
+            transactionId = paymentData.id;
+            finalPaymentReference = payment_reference;
+        }
 
-                    <p><strong>Status:</strong> Pending</p>
+        // =========================
+        // CASH ON DELIVERY CHECK
+        // Save order without Paystack verification
+        // =========================
 
-                    <br>
+        if (payment_method === "Cash on Delivery") {
+            paymentStatus = "Unpaid";
+            transactionId = null;
+            finalPaymentReference = null;
+        }
 
-                    <p>ESTEESBITES will prepare your meal soon.</p>
-                `
-            };
+        // =========================
+        // SAVE ORDER TO DATABASE
+        // =========================
 
-            transporter.sendMail(mailOptions, (emailErr) => {
+        const sql = `
+            INSERT INTO orders
+            (user_id, fullname, phone, address, city, payment_method, items, total, status, payment_status, payment_reference, transaction_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-                if (emailErr) {
-                    console.log("Email error:", emailErr.message);
-                } else {
-                    console.log("Order confirmation email sent");
+        db.query(
+            sql,
+            [
+                user_id,
+                fullname,
+                phone,
+                address,
+                city,
+                payment_method,
+                items,
+                total,
+                "Pending",
+                paymentStatus,
+                finalPaymentReference,
+                transactionId
+            ],
+            (err, result) => {
+
+                // Database error
+                if (err) {
+                    console.error(err);
+
+                    return res.status(500).json({
+                        message: "Failed to create order"
+                    });
                 }
 
-            });
+                // Success response
+                res.status(201).json({
+                    message: "Order created successfully",
+                    order_id: result.insertId,
+                    payment_status: paymentStatus
+                });
+            }
+        );
 
-        }
-    );
+    } catch (error) {
 
+        // Payment verification or server error
+        console.error(error.response?.data || error.message);
+
+        res.status(500).json({
+            message: "Order creation failed"
+        });
+    }
 });
 
 // =========================
@@ -935,21 +987,37 @@ app.post("/api/payments/initialize", authenticateToken, async (req, res) => {
         // Example: GHS 50 => 5000
         const amountInPesewas = amount * 100;
 
-        // Send request to Paystack
-        const response = await axios.post(
-            "https://api.paystack.co/transaction/initialize",
-            {
-                email,
-                amount: amountInPesewas,
-                currency: "GHS"
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
+        // =========================
+// SEND REQUEST TO PAYSTACK
+// =========================
+
+const response = await axios.post(
+    "https://api.paystack.co/transaction/initialize",
+    {
+        email,
+
+        // Amount in pesewas
+        // Example: GHS 50 => 5000
+        amount: amountInPesewas,
+
+        // Ghana currency
+        currency: "GHS",
+
+        // =========================
+        // CALLBACK URL
+        // User returns here after payment
+        // =========================
+
+        callback_url: "https://esteesbites.netlify.app/checkout.html"
+    },
+    
+    {
+        headers: {
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+            "Content-Type": "application/json"
+        }
+    }
+);
 
         // Return Paystack payment link
         res.json({

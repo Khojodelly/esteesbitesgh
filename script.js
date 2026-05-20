@@ -378,10 +378,109 @@ if (clearCartBtn) {
 }
 
 // =========================
-// CHECKOUT FORM + BACKEND ORDER
+// CHECKOUT FORM + PAYSTACK + CASH ON DELIVERY
 // =========================
 
 const checkoutForm = document.getElementById("checkout-form");
+const API_URL = "https://esteesbites-backend.onrender.com";
+
+
+// =========================
+// SAVE ORDER FUNCTION
+// Sends final order to backend
+// =========================
+
+async function saveOrder(orderData) {
+
+    const token = localStorage.getItem("token");
+
+    try {
+        const response = await fetch(`${API_URL}/api/orders`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showToast(data.message || "Order failed. Try again.", "error");
+            return;
+        }
+
+        showToast("Order placed successfully 🎉", "success");
+
+        localStorage.removeItem("cart");
+        localStorage.removeItem("pendingOrder");
+
+        setTimeout(() => {
+            window.location.href = "orders.html";
+        }, 2000);
+
+    } catch (error) {
+        console.log(error);
+        showToast("Something went wrong. Try again.", "error");
+    }
+}
+
+
+// =========================
+// VERIFY PAYSTACK PAYMENT AFTER REDIRECT
+// Saves order only after successful payment
+// =========================
+
+async function verifyPaystackPayment() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const reference = urlParams.get("reference");
+
+    if (!reference) return;
+
+    const token = localStorage.getItem("token");
+    const pendingOrder = JSON.parse(localStorage.getItem("pendingOrder"));
+
+    if (!pendingOrder) {
+        showToast("No pending order found.", "error");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/payments/verify/${reference}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showToast(data.message || "Payment verification failed", "error");
+            return;
+        }
+
+        pendingOrder.payment_reference = reference;
+
+        await saveOrder(pendingOrder);
+
+    } catch (error) {
+        console.log(error);
+        showToast("Payment verification failed", "error");
+    }
+}
+
+
+// Run payment verification when page loads
+verifyPaystackPayment();
+
+
+// =========================
+// CHECKOUT FORM SUBMIT
+// Handles Paystack and Cash on Delivery
+// =========================
 
 if (checkoutForm) {
 
@@ -389,30 +488,15 @@ if (checkoutForm) {
 
         e.preventDefault();
 
-        // Inputs
-        const fullname =
-            document.getElementById("fullname").value.trim();
+        const fullname = document.getElementById("fullname").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const city = document.getElementById("city").value.trim();
+        const paymentMethod = document.getElementById("payment-method").value;
 
-        const phone =
-            document.getElementById("phone").value.trim();
+        const formMessage = document.getElementById("form-message");
+        const successMessage = document.getElementById("success-message");
 
-        const address =
-            document.getElementById("address").value.trim();
-
-        const city =
-            document.getElementById("city").value.trim();
-
-        const paymentMethod =
-            document.getElementById("payment-method").value;
-
-        // Messages
-        const formMessage =
-            document.getElementById("form-message");
-
-        const successMessage =
-            document.getElementById("success-message");
-
-        // Clear messages
         formMessage.textContent = "";
         successMessage.classList.add("d-none");
 
@@ -421,27 +505,41 @@ if (checkoutForm) {
         // =========================
 
         if (fullname === "") {
-            formMessage.textContent = "Full name is required.";
+            showToast("Full name is required.", "error");
             return;
         }
 
         if (phone === "") {
-            formMessage.textContent = "Phone number is required.";
+            showToast("Phone number is required.", "error");
             return;
         }
 
         if (address === "") {
-            formMessage.textContent = "Delivery address is required.";
+            showToast("Delivery address is required.", "error");
             return;
         }
 
         if (city === "") {
-            formMessage.textContent = "City is required.";
+            showToast("City is required.", "error");
             return;
         }
 
         if (paymentMethod === "Select Payment Method") {
-            formMessage.textContent = "Please select a payment method.";
+            showToast("Please select a payment method.", "error");
+            return;
+        }
+
+        // =========================
+        // CHECK LOGIN
+        // =========================
+
+        if (!isLoggedIn()) {
+            showToast("Please login first", "error");
+
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+
             return;
         }
 
@@ -449,32 +547,12 @@ if (checkoutForm) {
         // GET USER + CART
         // =========================
 
-        const loggedUser =
-            JSON.parse(localStorage.getItem("loggedUser"));
-
-        const cart =
-            JSON.parse(localStorage.getItem("cart")) || [];
-
-        if(!isLoggedIn()){
-
-            showToast(
-                "Please login first",
-                "error"
-            );
-
-            setTimeout(() => {
-
-                window.location.href =
-                    "login.html";
-
-            }, 1500);
-
-            return;
-
-        }
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const token = localStorage.getItem("token");
 
         if (cart.length === 0) {
-            formMessage.textContent = "Your cart is empty.";
+            showToast("Your cart is empty.", "error");
             return;
         }
 
@@ -489,73 +567,70 @@ if (checkoutForm) {
         });
 
         // =========================
-        // SEND ORDER TO BACKEND
+        // PREPARE ORDER DATA
         // =========================
 
-        try {
+        const orderData = {
+            user_id: loggedUser.id,
+            email: loggedUser.email,
+            items: cart,
+            total,
+            fullname,
+            phone,
+            address,
+            city,
+            payment_method: paymentMethod
+        };
 
-    const response = await fetch(
-        "https://esteesbites-backend.onrender.com/api/orders",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                user_id: loggedUser.id,
-                email: loggedUser.email,
-                items: cart,
-                total,
-                fullname,
-                phone,
-                address,
-                city,
-                payment_method: paymentMethod
-            })
+        // =========================
+        // CASH ON DELIVERY
+        // Save order directly
+        // =========================
+
+        if (paymentMethod === "Cash on Delivery") {
+            await saveOrder(orderData);
+            return;
         }
-      );
 
-      let data = {};
+        // =========================
+        // PAYSTACK / DEBIT CARD
+        // Initialize payment first
+        // =========================
 
-     try {
-        data = await response.json();
-     } catch (jsonError) {
-        data = {};
-     }
+        if (paymentMethod === "Paystack" || paymentMethod === "Debit Card") {
 
-     if (!response.ok) {
-        formMessage.textContent =
-            data.message || "Order failed. Try again.";
-        return;
-     }
+            try {
+                const response = await fetch(`${API_URL}/api/payments/initialize`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        email: loggedUser.email,
+                        amount: total
+                    })
+                });
 
-     showToast(
-        "Order placed successfully 🎉",
-        "success"
-     );
+                const data = await response.json();
 
-     successMessage.textContent =
-        data.message || "Your order has been placed successfully.";
-     successMessage.classList.remove("d-none");
+                if (!response.ok) {
+                    showToast(data.message || "Payment initialization failed", "error");
+                    return;
+                }
 
-     localStorage.removeItem("cart");
-     checkoutForm.reset();
+                // Save order temporarily before going to Paystack
+                localStorage.setItem("pendingOrder", JSON.stringify(orderData));
 
-     setTimeout(() => {
-        window.location.href = "orders.html";
-     }, 2000);
+                // Redirect to Paystack checkout
+                window.location.href = data.authorization_url;
 
-} catch (error) {
-
-    console.log(error);
-
-    formMessage.textContent =
-        "Something went wrong. Try again.";
-
-}
-
+            } catch (error) {
+                console.log(error);
+                showToast("Payment initialization failed", "error");
+            }
+        }
     });
-
 }
 
 // =========================
