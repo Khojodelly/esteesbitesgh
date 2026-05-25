@@ -18,24 +18,34 @@
 </head>
 
 <body>
-    <!-- Navbar Start -->
+ <!-- Navbar Start -->
 
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
 
     <div class="container">
 
-        <a class="navbar-brand" href="index.html">
-            ESTEESBITES
-        </a>
+       <a class="navbar-brand" href="index.html">
+                ESTEESBITES
+            </a>
 
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
+            <div class="mobile-nav-actions">
 
-            <span class="navbar-toggler-icon"></span>
+                <a href="profile.html"
+                class="nav-profile-avatar"
+                title="Profile">
+                    👤
+                </a>
 
-        </button>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+            </div>
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
@@ -51,6 +61,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="menu.html">
                         Menu
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="catering.html">
+                        Catering
                     </a>
                 </li>
 
@@ -76,6 +92,9 @@
                     </a>
                 </li>
 
+                
+
+
                 <!-- Guest Links -->
                 <li class="nav-item" id="login-link">
                     <a class="nav-link" href="login.html">
@@ -95,13 +114,15 @@
                     </a>
                 </li>
 
-                <!-- Logged-in User -->
-                <li class="nav-item d-none" id="user-info">
-                    <span class="nav-link fw-bold" id="username"></span>
+                <li class="nav-item desktop-profile-avatar">
+                    <a href="profile.html"
+                    class="nav-profile-avatar">
+                        👤
+                    </a>
                 </li>
 
+        
                 
-
                 <li class="nav-item d-none" id="logout-item">
                     <button class="btn btn-danger btn-sm ms-lg-2" id="logout-btn">
                         Logout
@@ -128,37 +149,89 @@
 
 
 <!-- About Hero Start -->
-<section class="bg-black text-white text-center py-5">
-    <div class="container">
-        <h1 class="display-5 fw-bold">About ESTEESBITES</h1>
-        <p class="lead">Fresh meals, warm service, and delicious memories.</p>
+<section class="about-hero-section reveal-left">
+
+    <div class="about-hero-overlay"></div>
+
+    <div class="container position-relative">
+
+        <div class="row align-items-center min-vh-50">
+
+            <div class="col-lg-7 text-white">
+
+                <span class="about-badge">
+                    Welcome to ESTEESBITES
+                </span>
+
+                <h1 class="about-hero-title mt-3">
+                    Freshly Prepared Meals, Made With Love.
+                </h1>
+
+                <p class="about-hero-text">
+                    Enjoy tasty homemade meals, preorders, event catering,
+                    pickup, and delivery — all prepared with care.
+                </p>
+
+                <div class="d-flex gap-3 flex-wrap mt-4">
+
+                    <a href="menu.html" class="btn btn-danger px-4">
+                        Explore Menu
+                    </a>
+
+                    <a href="orders.html" class="btn btn-outline-light px-4">
+                        Track Order
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </section>
 <!-- About Hero End -->
 
 
 <!-- About Story Start -->
-<section class="py-5">
+<section class="py-5 reveal-right">
+
     <div class="container">
+
         <div class="row align-items-center g-5">
 
             <div class="col-lg-6">
-                <img src="images/about-food.jpg"
-                     class="img-fluid rounded-4 shadow"
-                     alt="ESTEESBITES food">
+
+                <div class="about-image-wrapper">
+
+                    <img src="images/about-food.jpg"
+                         class="img-fluid about-main-image"
+                         alt="ESTEESBITES food">
+
+                    <div class="about-floating-card">
+                        <h5>Fresh • Tasty • Reliable</h5>
+                        <small>Prepared with care daily</small>
+                    </div>
+
+                </div>
+
             </div>
 
             <div class="col-lg-6">
-                <span class="menu-small-title">Our Story</span>
 
-                <h2 class="fw-bold mt-2 mb-4">
+                <span class="menu-small-title">
+                    Our Story
+                </span>
+
+                <h2 class="about-section-title mt-2 mb-4">
                     Homemade Taste, Delivered With Love
                 </h2>
 
                 <p class="text-muted">
                     ESTEESBITES was created from a passion for cooking and serving
                     delicious meals that bring people together. What started as a
-                    dream to open a restaurant is now beginning online, making it
+                    dream to open a restaurant is now growing online, making it
                     easier for customers to enjoy fresh and tasty food from anywhere.
                 </p>
 
@@ -168,52 +241,98 @@
                 </p>
 
                 <a href="menu.html" class="btn btn-dark mt-3">
-                    Explore Menu
+                    Order From Menu
                 </a>
+
             </div>
 
         </div>
+
     </div>
+
 </section>
 <!-- About Story End -->
 
 
+<!-- Stats Section Start -->
+<section class="about-stats-section py-5 reveal-left">
+
+    <div class="container">
+
+        <div class="row g-4 text-center">
+
+            <div class="col-md-4">
+                <div class="about-stat-card">
+                    <h3>Preorders</h3>
+                    <p>Made fresh for scheduled pickup or delivery.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="about-stat-card">
+                    <h3>Events</h3>
+                    <p>Catering support for birthdays, meetings, and occasions.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="about-stat-card">
+                    <h3>Quality</h3>
+                    <p>Prepared with love, hygiene, and customer satisfaction.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- Stats Section End -->
+
+
 <!-- Why Choose Us Start -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-light reveal-left">
+
     <div class="container">
 
         <div class="text-center mb-5">
-            <span class="menu-small-title">Why Choose Us</span>
-            <h2 class="fw-bold mt-2">What Makes Us Special</h2>
+
+            <span class="menu-small-title">
+                Why Choose Us
+            </span>
+ <h2 class="about-section-title mt-2">
+                What Makes Us Special
+            </h2>
+
         </div>
 
         <div class="row g-4">
 
             <div class="col-md-4">
-                <div class="card shadow-sm p-4 text-center h-100">
+                <div class="about-feature-card">
                     <div class="about-icon">🍲</div>
-                    <h5 class="fw-bold mt-3">Fresh Meals</h5>
-                    <p class="text-muted">
+                    <h5>Fresh Meals</h5>
+                    <p>
                         Meals are prepared fresh with quality ingredients.
                     </p>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card shadow-sm p-4 text-center h-100">
-                    <div class="about-icon">🚚</div>
-                    <h5 class="fw-bold mt-3">Fast Delivery</h5>
-                    <p class="text-muted">
-                        We deliver your favorite meals quickly and safely.
+                <div class="about-feature-card">
+                    <div class="about-icon">📅</div>
+                    <h5>Easy Preorders</h5>
+                    <p>
+                        Schedule pickup or delivery ahead of time.
                     </p>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card shadow-sm p-4 text-center h-100">
+                <div class="about-feature-card">
                     <div class="about-icon">❤️</div>
-                    <h5 class="fw-bold mt-3">Made With Love</h5>
-                    <p class="text-muted">
+                    <h5>Made With Love</h5>
+                    <p>
                         Every order is handled with care and passion.
                     </p>
                 </div>
@@ -222,102 +341,179 @@
         </div>
 
     </div>
+
 </section>
 <!-- Why Choose Us End -->
 
 
-<!-- Chef Section Start -->
-<section class="py-5">
+<!-- How It Works Start -->
+<section class="py-5 reveal-right">
+
     <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="menu-small-title">
+                How It Works
+            </span>
+
+            <h2 class="about-section-title mt-2">
+                Simple Ordering Process
+            </h2>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+                <div class="process-card">
+                    <span>01</span>
+                    <h5>Choose Meal</h5>
+                    <p>Select from our menu or preorder meals.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="process-card">
+                    <span>02</span>
+                    <h5>Schedule</h5>
+                    <p>Pick delivery or pickup date and time.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="process-card">
+                    <span>03</span>
+                    <h5>Confirm</h5>
+                    <p>Place your order and receive confirmation.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="process-card">
+                    <span>04</span>
+                    <h5>Enjoy</h5>
+                    <p>Receive your meal fresh and ready.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- How It Works End -->
+
+
+<!-- Chef Section Start -->
+<section class="py-5 about-chef-section reveal-right">
+
+    <div class="container">
+
         <div class="row align-items-center g-5">
 
             <div class="col-lg-6">
-                <span class="menu-small-title">Meet The Chef</span>
 
-                <h2 class="fw-bold mt-2 mb-4">
+                <span class="menu-small-title">
+                    Meet The Chef
+                </span>
+
+                <h2 class="about-section-title mt-2 mb-4">
                     Passion Behind Every Bite
                 </h2>
 
                 <p class="text-muted">
                     ESTEESBITES is powered by a chef with a love for preparing
-                    tasty meals and creating happy food experiences. The goal is
-                    to grow from an online restaurant into a trusted food brand
-                    customers can always count on.
+                    tasty meals and creating happy food experiences.
                 </p>
+
             </div>
 
             <div class="col-lg-6">
 
-    <!-- Chef Profile -->
-    <div class="chef-profile-card shadow-sm rounded-4 p-4 mb-4">
+                <div class="chef-profile-card shadow-sm rounded-4 p-4 mb-4">
 
-        <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3">
 
-            <img src="images/chef-esther.jpg"
-                 alt="Chef Esther"
-                 class="chef-image">
+                        <img src="images/chef-esther.jpg"
+                             alt="Chef Esther"
+                             class="chef-image">
 
-            <div>
+                        <div>
 
-                <h5 class="fw-bold mb-1">
-                    Esther Bawanin
-                </h5>
+                            <h5 class="fw-bold mb-1">
+                                Esther Bawanin
+                            </h5>
 
-                <small class="text-muted">
-                    Head Chef • ESTEESBITES
-                </small>
+                            <small class="text-muted">
+                                Head Chef • ESTEESBITES
+                            </small>
+
+                        </div>
+ </div>
+
+                    <hr>
+
+                    <p class="text-muted mb-2">
+                        Esther Bawanin holds an HND in Hotel Catering and
+                        Institution Management from Sunyani Technical University.
+                    </p>
+
+                    <p class="text-muted mb-0">
+                        She also gained professional experience working for one
+                        year at Golden Beam Hotel, Kumasi.
+                    </p>
+
+                </div>
+
+                <div class="chef-card shadow-sm p-4 rounded-4">
+
+                    <h4 class="fw-bold">
+                        Our Mission
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        To serve delicious, affordable, and reliable meals while
+                        building a restaurant brand customers love and trust.
+                    </p>
+
+                </div>
 
             </div>
 
         </div>
 
-        <hr>
-
-        <p class="text-muted mb-2">
-
-            Esther Bawanin holds an HND in
-            Hotel Catering and Institution Management
-            from Sunyani Technical University.
-
-        </p>
-
-        <p class="text-muted mb-0">
-
-            She also gained professional experience
-            working for one year at Golden Beam Hotel,
-            Kumasi, where she developed her passion
-            for preparing quality meals and delivering
-            excellent customer satisfaction.
-
-        </p>
-
     </div>
 
-    <!-- Mission Card -->
-    <div class="chef-card shadow-sm p-4 rounded-4">
-
-        <h4 class="fw-bold">
-            Our Mission
-        </h4>
-
-        <p class="text-muted mb-0">
-
-            To serve delicious, affordable,
-            and reliable meals while building
-            a restaurant brand customers
-            love and trust.
-
-        </p>
-
-    </div>
-
-</div>
-
-        </div>
-    </div>
 </section>
 <!-- Chef Section End -->
 
+
+<!-- CTA Start -->
+<section class="about-cta-section py-5 text-center text-white reveal-left">
+
+    <div class="container">
+
+        <h2 class="fw-bold">
+            Ready To Taste ESTEESBITES?
+        </h2>
+
+        <p>
+            Place your order, preorder your favorite meal, or contact us for events.
+        </p>
+
+        <a href="menu.html" class="btn btn-light px-4 mt-3">
+            Order Now
+        </a>
+
+        <a href="catering.html" class="btn btn-outline-light px-4 mt-3 ms-2">
+            Request Catering
+        </a>
+
+    </div>
+
+</section>
+<!-- CTA End -->
 
 <!-- Footer Start -->
 
@@ -372,7 +568,7 @@
                 </h5>
 
                 <p class="footer-text">
-                    ✉ info@esteesbites.com
+                    ✉ estherbawanin@gmail.com
                 </p>
 
                 <p class="footer-text">
@@ -380,7 +576,7 @@
                 </p>
 
                 <p class="footer-text">
-                    📍 Ghana
+                    📍 Ejura - Ashanti Region, Ghana
                 </p>
 
             </div>
@@ -428,6 +624,19 @@
     
     <!-- Custom JS -->
     <script src="script.js"></script>
+
+  <!-- =========================
+FLOATING CART BUTTON
+========================= -->
+
+<a href="cart.html" class="floating-cart-btn">
+    🛒
+    <span id="floating-cart-count">0</span>
+</a> 
+
+<a href="support.html" class="floating-support-btn">
+    💬
+</a>
 
 </body>
 

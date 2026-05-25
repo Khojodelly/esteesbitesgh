@@ -18,24 +18,34 @@
 </head>
 
 <body>
-<!-- Navbar Start -->
+ <!-- Navbar Start -->
 
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
 
     <div class="container">
 
-        <a class="navbar-brand" href="index.html">
-            ESTEESBITES
-        </a>
+       <a class="navbar-brand" href="index.html">
+                ESTEESBITES
+            </a>
 
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
+            <div class="mobile-nav-actions">
 
-            <span class="navbar-toggler-icon"></span>
+                <a href="profile.html"
+                class="nav-profile-avatar"
+                title="Profile">
+                    👤
+                </a>
 
-        </button>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+            </div>
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
@@ -51,6 +61,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="menu.html">
                         Menu
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="catering.html">
+                        Catering
                     </a>
                 </li>
 
@@ -76,6 +92,9 @@
                     </a>
                 </li>
 
+                
+
+
                 <!-- Guest Links -->
                 <li class="nav-item" id="login-link">
                     <a class="nav-link" href="login.html">
@@ -95,13 +114,15 @@
                     </a>
                 </li>
 
-                <!-- Logged-in User -->
-                <li class="nav-item d-none" id="user-info">
-                    <span class="nav-link fw-bold" id="username"></span>
+                <li class="nav-item desktop-profile-avatar">
+                    <a href="profile.html"
+                    class="nav-profile-avatar">
+                        👤
+                    </a>
                 </li>
 
+        
                 
-
                 <li class="nav-item d-none" id="logout-item">
                     <button class="btn btn-danger btn-sm ms-lg-2" id="logout-btn">
                         Logout
@@ -128,7 +149,7 @@
 
 <!-- Order Header Start -->
 
-<section class="bg-dark text-white text-center py-5">
+<section class="bg-dark text-white text-center py-5 reveal">
 
     <div class="container">
 
@@ -148,7 +169,7 @@
 
 <!-- Orders Section -->
 
-<section class="py-5">
+<section class="py-5 reveal">
 
     <div class="container">
 
@@ -220,7 +241,7 @@
                 </h5>
 
                 <p class="footer-text">
-                    ✉ info@esteesbites.com
+                    ✉ estherbawanin@gmail.com
                 </p>
 
                 <p class="footer-text">
@@ -228,7 +249,7 @@
                 </p>
 
                 <p class="footer-text">
-                    📍 Ghana
+                    📍 Ejura - Ashanti Region, Ghana
                 </p>
 
             </div>
@@ -288,6 +309,19 @@
     
     <!-- Custom JS -->
     <script src="script.js"></script>
+
+    <!-- =========================
+FLOATING CART BUTTON
+========================= -->
+
+<a href="cart.html" class="floating-cart-btn">
+    🛒
+    <span id="floating-cart-count">0</span>
+</a>
+
+<a href="support.html" class="floating-support-btn">
+    💬
+</a>
 
 </body>
 

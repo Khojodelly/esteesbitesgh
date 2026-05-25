@@ -18,24 +18,34 @@
 </head>
 
 <body>
-<!-- Navbar Start -->
+ <!-- Navbar Start -->
 
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
 
     <div class="container">
 
-        <a class="navbar-brand" href="index.html">
-            ESTEESBITES
-        </a>
+       <a class="navbar-brand" href="index.html">
+                ESTEESBITES
+            </a>
 
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
+            <div class="mobile-nav-actions">
 
-            <span class="navbar-toggler-icon"></span>
+                <a href="profile.html"
+                class="nav-profile-avatar"
+                title="Profile">
+                    👤
+                </a>
 
-        </button>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+            </div>
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
@@ -51,6 +61,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="menu.html">
                         Menu
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="catering.html">
+                        Catering
                     </a>
                 </li>
 
@@ -76,6 +92,9 @@
                     </a>
                 </li>
 
+                
+
+
                 <!-- Guest Links -->
                 <li class="nav-item" id="login-link">
                     <a class="nav-link" href="login.html">
@@ -95,13 +114,15 @@
                     </a>
                 </li>
 
-                <!-- Logged-in User -->
-                <li class="nav-item d-none" id="user-info">
-                    <span class="nav-link fw-bold" id="username"></span>
+                <li class="nav-item desktop-profile-avatar">
+                    <a href="profile.html"
+                    class="nav-profile-avatar">
+                        👤
+                    </a>
                 </li>
 
+        
                 
-
                 <li class="nav-item d-none" id="logout-item">
                     <button class="btn btn-danger btn-sm ms-lg-2" id="logout-btn">
                         Logout
@@ -128,7 +149,7 @@
 
 <!-- Checkout Header Start -->
 
-<section class="bg-dark text-white text-center py-5">
+<section class="bg-dark text-white text-center py-5 reveal">
 
     <div class="container">
 
@@ -148,27 +169,64 @@
 
 <!-- Checkout Section Start -->
 
-<section class="py-5">
+<section class="py-5 reveal">
 
     <div class="container">
+        <!-- =========================
+        CHECKOUT PROGRESS STEPS
+        ========================= -->
+
+        <div class="checkout-progress mb-5">
+
+            <div class="checkout-step completed">
+                <div class="step-icon">🛒</div>
+                <span>Cart</span>
+            </div>
+
+            <div class="checkout-line active"></div>
+
+            <div class="checkout-step active">
+                <div class="step-icon">📍</div>
+                <span>Delivery</span>
+            </div>
+
+            <div class="checkout-line"></div>
+
+            <div class="checkout-step" id="payment-step">
+                <div class="step-icon">💳</div>
+                <span>Payment</span>
+            </div>
+
+            <div class="checkout-line" id="payment-line"></div>
+
+            <div class="checkout-step" id="complete-step">
+                <div class="step-icon">✅</div>
+                <span>Complete</span>
+            </div>
+
+        </div>
 
         <div class="row g-4">
 
             <!-- Delivery Form -->
             <div class="col-lg-8">
 
-                <div class="card checkout-card shadow-sm p-4">
+                <div class="card checkout-card">
+                    <div class="card-body">
 
-                    <h3 class="mb-4">
-                        Delivery Information
-                    </h3>
+                        <h3 class="checkout-title">
+                            Delivery Information
+                        </h3>
 
-                    <div id="success-message" 
-                    class="alert alert-success d-none">
-                    Order placed successfully!
-                </div>
+                        <p class="checkout-subtitle">
+                            Enter your delivery details and payment method.
+                        </p>
 
-                    <form id="checkout-form">
+                        <div id="success-message" class="alert alert-success d-none">
+                            Order placed successfully!
+                        </div>
+
+                        <form id="checkout-form" class="checkout-form">
 
                         <div class="row">
 
@@ -181,7 +239,9 @@
 
                                 <input type="text"
                                        class="form-control"
-                                       id="fullname">
+                                       id="fullname"
+                                       placeholder="John Doe"
+                                       autocomplete="name">
 
                             </div>
 
@@ -192,8 +252,10 @@
                                     Phone Number
                                 </label>
 
-                                <input type="text" 
-                                       class="form-control" id="phone">
+                                <input type="tel" 
+                                       class="form-control" id="phone"
+                                       placeholder="054 123 4567"
+                                       autocomplete="tel">
 
                             </div>
 
@@ -206,7 +268,7 @@
                                 Delivery Address
                             </label>
 
-                            <textarea class="form-control" rows="4" id="address"></textarea>
+                            <textarea class="form-control" rows="4" id="address" placeholder="House number, street, region" autocomplete="street-address"></textarea>
 
                         </div>
 
@@ -217,9 +279,65 @@
                                 City
                             </label>
 
-                            <input type="text" class="form-control" id="city">
+                            <input type="text" class="form-control" id="city" placeholder="Accra" autocomplete="address-level2">
 
                         </div>
+
+                        <!-- =========================
+                            PREORDER DETAILS
+                            ========================= -->
+
+                            <div class="mb-4">
+
+                                <label class="form-label">
+                                    Order Type
+                                </label>
+
+                                <select class="form-select" id="order-type">
+                                    <option value="Delivery">Delivery</option>
+                                    <option value="Pickup">Pickup</option>
+                                    <option value="Event">Event</option>
+                                    <option value="Catering">Catering</option>
+                                </select>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        Preferred Date
+                                    </label>
+
+                                    <input type="date"
+                                        class="form-control"
+                                        id="preferred-date">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        Preferred Time
+                                    </label>
+
+                                    <input type="time"
+                                        class="form-control"
+                                        id="preferred-time">
+                                </div>
+
+                            </div>
+
+                            <div class="mb-4">
+
+                                <label class="form-label">
+                                    Special Notes
+                                </label>
+
+                                <textarea class="form-control"
+                                        id="special-notes"
+                                        rows="4"
+                                        placeholder="Example: Less pepper, extra chicken, birthday event, deliver after 5pm..."></textarea>
+
+                            </div>
 
                         <!-- Payment Method -->
                         <div class="mb-4">
@@ -228,47 +346,78 @@
                                 Payment Method
                             </label>
 
-                            <select class="form-select" id="payment-method">
+                            <!-- =========================
+                                PAYMENT METHOD CARDS
+                                ========================= -->
 
-                                <option>
-                                    Select Payment Method
-                                </option>
+                                <div class="payment-options">
 
-                                <option>
-                                    Paystack
-                                </option>
+                                    <div class="payment-card active-payment"
+                                        data-method="Paystack">
 
-                                <option>
-                                    Cash on Delivery
-                                </option>
+                                        <div class="payment-icon">
+                                            💳
+                                        </div>
 
-                                <option>
-                                    Debit Card
-                                </option>
+                                        <div>
+                                            <strong>Paystack</strong>
+                                            <p class="mb-0 text-muted">
+                                                Pay with card or mobile money
+                                            </p>
+                                        </div>
 
-                            </select>
+                                    </div>
+
+                                    <div class="payment-card"
+                                        data-method="Cash on Delivery">
+
+                                        <div class="payment-icon">
+                                            💵
+                                        </div>
+
+                                        <div>
+                                            <strong>Cash on Delivery</strong>
+                                            <p class="mb-0 text-muted">
+                                                Pay when your food arrives
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- Hidden input -->
+                                <input type="hidden"
+                                    id="payment-method"
+                                    value="Paystack">
+
+                            <div class="form-text text-muted mt-2">
+                                Choose Mobile Money for instant checkout, or Cash on Delivery if you'd like to pay when your meal arrives.
+                            </div>
 
                         </div>
 
-                        <button class="btn btn-dark btn-lg w-100 checkout-btn">
+                        <button type="submit" class="place-order-btn btn btn-dark btn-lg w-100 checkout-btn">
                             Place Order
                         </button>
 
-                        <div id="form-message" 
-                             class="mb-3 text-danger fw-bold">
-                            
-                            </div>
+                        <div id="form-message" class="mb-3 text-danger fw-bold"></div>
 
-                    </form>
+                        </form>
+
+                    </div>
 
                 </div>
 
             </div>
 
-            <!-- Order Summary -->
-<div class="col-lg-4">
+            
 
-    <div class="card checkout-summary-card shadow-sm p-4">
+            <!-- Order Summary -->
+  <div class="col-lg-4">
+
+    <div class="card checkout-summary-card checkout-summary">
+      <div class="card-body">
 
         <h4 class="mb-4">
             Order Summary
@@ -296,10 +445,46 @@
             <span>Delivery Fee</span>
 
             <strong id="checkout-delivery">
-                GH₵ 20
+                GH₵ 10
             </strong>
 
         </div>
+
+        <div class="coupon-box mt-3">
+    <input type="text"
+           class="form-control mb-2"
+           id="coupon-code-input"
+           placeholder="Enter coupon code">
+
+    <button type="button"
+            class="btn btn-outline-dark w-100"
+            id="apply-coupon-btn">
+        Apply Coupon
+    </button>
+
+    <small id="coupon-message" class="d-block mt-2"></small>
+</div>
+
+<!-- =========================
+LOYALTY POINTS REDEMPTION
+========================= -->
+
+<div class="loyalty-box mt-3">
+
+    <div class="d-flex justify-content-between mb-2">
+        <span>Your Points</span>
+        <strong id="checkout-loyalty-points">0</strong>
+    </div>
+
+    <button type="button"
+            class="btn btn-outline-warning w-100"
+            id="redeem-points-btn">
+        Redeem Points
+    </button>
+
+    <small id="points-message" class="d-block mt-2"></small>
+
+</div>
 
         <hr>
 
@@ -312,6 +497,8 @@
             </strong>
 
         </div>
+
+      </div>
 
     </div>
 
@@ -378,7 +565,7 @@
                 </h5>
 
                 <p class="footer-text">
-                    ✉ info@esteesbites.com
+                    ✉ estherbawanin@gmail.com
                 </p>
 
                 <p class="footer-text">
@@ -386,7 +573,7 @@
                 </p>
 
                 <p class="footer-text">
-                    📍 Ghana
+                    📍 Ejura - Ashanti Region, Ghana
                 </p>
 
             </div>
@@ -448,6 +635,40 @@
     
     <!-- Custom JS -->
     <script src="script.js"></script>
+
+    <!-- =========================
+    CHECKOUT PROCESSING OVERLAY
+    ========================= -->
+
+    <div id="checkout-overlay" class="checkout-overlay d-none">
+
+        <div class="checkout-overlay-box">
+
+            <div class="checkout-spinner"></div>
+
+            <h4 id="checkout-overlay-title">
+                Processing your order...
+            </h4>
+
+            <p id="checkout-overlay-text">
+                Please wait while we prepare your checkout.
+            </p>
+
+        </div>
+
+    </div>
+<!-- =========================
+FLOATING CART BUTTON
+========================= -->
+
+<a href="cart.html" class="floating-cart-btn">
+    🛒
+    <span id="floating-cart-count">0</span>
+</a>
+
+<a href="support.html" class="floating-support-btn">
+    💬
+</a>
 
 </body>
 

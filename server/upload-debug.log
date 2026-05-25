@@ -1,0 +1,26 @@
+
+=== UPLOAD DEBUG ===
+BODY: {"name":"Pizza Special","price":"25.99","category":"fast-food"}
+FILE: {
+  "fieldname": "image",
+  "originalname": "pizza.jpg",
+  "encoding": "7bit",
+  "mimetype": "image/jpeg",
+  "path": "https://res.cloudinary.com/dpql4e7zq/image/upload/v1779350698/esteesbites/meals/qesnflgrbxlqcedirqei.jpg",
+  "size": 3656521,
+  "filename": "esteesbites/meals/qesnflgrbxlqcedirqei"
+}
+IMAGE URL: https://res.cloudinary.com/dpql4e7zq/image/upload/v1779350698/esteesbites/meals/qesnflgrbxlqcedirqei.jpg
+
+=== UPLOAD DEBUG ===
+BODY: {"name":"Cake Bouquet - 7 set","price":"200","category":"cake"}
+FILE: {
+  "fieldname": "image",
+  "originalname": "bouquet.jpg",
+  "encoding": "7bit",
+  "mimetype": "image/jpeg",
+  "path": "https://res.cloudinary.com/dpql4e7zq/image/upload/v1779350765/esteesbites/meals/wznletijyhmbp18v0dbc.jpg",
+  "size": 177045,
+  "filename": "esteesbites/meals/wznletijyhmbp18v0dbc"
+}
+IMAGE URL: https://res.cloudinary.com/dpql4e7zq/image/upload/v1779350765/esteesbites/meals/wznletijyhmbp18v0dbc.jpg

@@ -20,24 +20,34 @@
 <body>
 <body>
 
-<!-- Navbar Start -->
+ <!-- Navbar Start -->
 
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm sticky-top">
 
     <div class="container">
 
-        <a class="navbar-brand" href="index.html">
-            ESTEESBITES
-        </a>
+       <a class="navbar-brand" href="index.html">
+                ESTEESBITES
+            </a>
 
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
+            <div class="mobile-nav-actions">
 
-            <span class="navbar-toggler-icon"></span>
+                <a href="profile.html"
+                class="nav-profile-avatar"
+                title="Profile">
+                    👤
+                </a>
 
-        </button>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+            </div>
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
@@ -53,6 +63,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="menu.html">
                         Menu
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="catering.html">
+                        Catering
                     </a>
                 </li>
 
@@ -78,6 +94,9 @@
                     </a>
                 </li>
 
+                
+
+
                 <!-- Guest Links -->
                 <li class="nav-item" id="login-link">
                     <a class="nav-link" href="login.html">
@@ -97,13 +116,15 @@
                     </a>
                 </li>
 
-                <!-- Logged-in User -->
-                <li class="nav-item d-none" id="user-info">
-                    <span class="nav-link fw-bold" id="username"></span>
+                <li class="nav-item desktop-profile-avatar">
+                    <a href="profile.html"
+                    class="nav-profile-avatar">
+                        👤
+                    </a>
                 </li>
 
+        
                 
-
                 <li class="nav-item d-none" id="logout-item">
                     <button class="btn btn-danger btn-sm ms-lg-2" id="logout-btn">
                         Logout
@@ -128,151 +149,74 @@
 
 <!-- Navbar End -->
 
-
-<!-- Cart Header -->
-
-<section class="bg-dark text-white py-5 text-center">
-
-    <div class="container">
-
-        <h1 class="display-5">
-            Your Cart
-        </h1>
-
-        <p class="lead">
-            Review your selected meals before checkout.
-        </p>
-
-    </div>
-
-</section>
-
-
 <!-- Cart Section -->
 
-<section class="py-5">
+<section class="py-5 reveal">
 
     <div class="container">
 
         <!-- Empty Cart Message -->
-        <div id="empty-cart-message"
-     class="empty-state d-none">
+        <div id="empty-cart-message" class="empty-state d-none">
 
-    <div class="empty-icon">
-        🛒
-    </div>
+            <div class="empty-icon">
+                🛒
+            </div>
 
-    <h4>
-        Your cart is empty
-    </h4>
+            <h4>
+                Your cart is empty
+            </h4>
 
-    <p>
-        Add delicious meals to get started.
-    </p>
+            <p>
+                Add delicious meals to get started.
+            </p>
 
-    <a href="menu.html"
-       class="btn btn-dark">
-
-        Browse Menu
-
-    </a>
-
-</div>
-
-        <!-- Cart Table -->
-        <div class="table-responsive">
-
-            <table class="table table-bordered table-hover align-middle">
-
-                <thead class="table-dark">
-
-                    <tr>
-
-                        <th>Meal</th>
-
-                        <th>Price</th>
-
-                        <th>Quantity</th>
-
-                        <th>Total</th>
-
-                        <th>Action</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="cart-items">
-
-                </tbody>
-
-            </table>
+            <a href="menu.html" class="btn btn-dark">
+                Browse Menu
+            </a>
 
         </div>
 
-    </div>
+        <div class="row g-4">
 
-</section>
+            <!-- Cart Items -->
+            <div class="col-lg-8">
 
+                <div class="cart-items-wrapper" id="cart-items">
 
-<!-- Cart Summary -->
+                    <!-- Cart items load here from JS -->
 
-<section class="pb-5">
+                </div>
 
-    <div class="container">
+            </div>
 
-        <div class="row justify-content-end">
+            <!-- Cart Summary -->
+            <div class="col-lg-4">
 
-            <div class="col-md-4">
-
-                <div class="card cart-summary-card shadow-sm p-4">
+                <div class="cart-summary-box">
 
                     <h4 class="mb-4">
-
                         Cart Summary
-
                     </h4>
 
                     <div class="d-flex justify-content-between mb-3">
-
                         <span>Subtotal:</span>
-
-                        <strong id="subtotal">
-
-                            GH₵ 0
-
-                        </strong>
-
+                        <strong id="subtotal">GH₵ 0</strong>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3">
-
                         <span>Delivery Fee:</span>
-
-                        <strong id="delivery-fee">
-
-                            GH₵ 20
-
-                        </strong>
-
+                        <strong id="delivery-fee">GH₵ 10</strong>
                     </div>
 
                     <hr>
 
                     <div class="d-flex justify-content-between mb-4">
-
                         <span>Total:</span>
-
-                        <strong id="total">
-
-                            GH₵ 0
-
-                        </strong>
-
+                        <strong id="total">GH₵ 0</strong>
                     </div>
 
                     <a href="checkout.html"
-                       class="btn btn-dark w-100"
+                       class="checkout-main-btn d-flex align-items-center justify-content-center text-decoration-none"
                        id="checkout-btn">
 
                         Proceed to Checkout
@@ -343,7 +287,7 @@
                 </h5>
 
                 <p class="footer-text">
-                    ✉ info@esteesbites.com
+                    ✉ estherbawanin@gmail.com
                 </p>
 
                 <p class="footer-text">
@@ -351,7 +295,7 @@
                 </p>
 
                 <p class="footer-text">
-                    📍 Ghana
+                    📍 Ejura - Ashanti Region, Ghana
                 </p>
 
             </div>
@@ -399,6 +343,19 @@
 
 <!-- Custom JS -->
 <script src="script.js"></script>
+
+<!-- =========================
+FLOATING CART BUTTON
+========================= -->
+
+<a href="cart.html" class="floating-cart-btn">
+    🛒
+    <span id="floating-cart-count">0</span>
+</a>
+
+<a href="support.html" class="floating-support-btn">
+    💬
+</a>
 
 
 </body>

@@ -1,0 +1,36 @@
+◇ injected env (12) from ..\.env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+Cloudinary env loaded: { cloud_name: true, api_key: true, api_secret: true }
+Server running on port 5000
+MySQL Connected
+SMTP READY
+Upload middleware error: {
+  message: 'Invalid cloud_name Root',
+  name: 'Error',
+  http_code: 401,
+  storageErrors: []
+}
+Upload middleware error: {
+  message: 'Invalid cloud_name Root',
+  name: 'Error',
+  http_code: 401,
+  storageErrors: []
+}
+Upload middleware error: {
+  message: 'Invalid cloud_name Root',
+  name: 'Error',
+  http_code: 401,
+  storageErrors: []
+}
+Upload middleware error: {
+  message: 'Invalid cloud_name Root',
+  name: 'Error',
+  http_code: 401,
+  storageErrors: []
+}
+Upload middleware error: {
+  message: 'Invalid cloud_name Root',
+  name: 'Error',
+  http_code: 401,
+  storageErrors: []
+}
