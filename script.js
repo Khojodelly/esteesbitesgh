@@ -1695,7 +1695,11 @@ if (mealsContainer) {
         </div>
     `;
 
-    apiFetch(`${API_URL}/api/meals`)
+    apiFetch(`${API_URL}/api/meals`, {
+    headers: {
+        "ngrok-skip-browser-warning": "true"
+    }
+})
 
         .then(response => {
             if (!response.ok) {
