@@ -4162,7 +4162,11 @@ const featuredMealsContainer =
 
 if (featuredMealsContainer) {
 
-    fetch(`${API_URL}/api/home/featured-meals`)
+    fetch(`${API_URL}/api/home/featured-meals`, {
+        headers = {
+            "ngrok-skip-browser-warning": "true"
+        }
+    })
 
         .then(response => response.json())
 
