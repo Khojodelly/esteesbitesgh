@@ -7,6 +7,16 @@ console.log("script connected");
 
 const API_URL = "https://anytime-overhand-judgingly.ngrok-free.dev";
 
+function apiFetch(url, options = {}) {
+    return fetch(url, {
+        ...options,
+        headers: {
+            ...(options.headers || {}),
+            "ngrok-skip-browser-warning": "true"
+        }
+    });
+}
+
 // =========================
 // ESTEESBITES CART SYSTEM
 // =========================
@@ -121,7 +131,7 @@ if (profileForm) {
 
     async function loadProfile() {
         try {
-            const response = await fetch(`${API_URL}/api/profile`, {
+            const response = await apiFetch(`${API_URL}/api/profile`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -177,7 +187,7 @@ if (profileForm) {
                 // =========================
 
                 const recentOrdersResponse =
-                    await fetch(
+                    await apiFetch(
                         `${API_URL}/api/profile/recent-orders`,
                         {
                             headers: {
@@ -271,7 +281,7 @@ if (profileForm) {
 
             try {
 
-                const response = await fetch(
+                const response = await apiFetch(
                     `${API_URL}/api/favorites`,
                     {
                         headers: {
@@ -338,7 +348,7 @@ if (profileForm) {
             const token = localStorage.getItem("token");
 
             try {
-                const response = await fetch(`${API_URL}/api/favorites/${mealId}`, {
+                const response = await apiFetch(`${API_URL}/api/favorites/${mealId}`, {
                     method: "DELETE",
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -373,7 +383,7 @@ if (profileForm) {
 
             try {
 
-                const response = await fetch(
+                const response = await apiFetch(
                     `${API_URL}/api/notifications`,
                     {
                         headers: {
@@ -479,7 +489,7 @@ if (profileForm) {
 
             try {
 
-                const response = await fetch(
+                const response = await apiFetch(
 
                     `${API_URL}/api/notifications/${notificationId}/read`,
 
@@ -548,7 +558,7 @@ if (profileForm) {
     const card = e.target.closest(".notification-card");
 
     try {
-        await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
+        await apiFetch(`${API_URL}/api/notifications/${notificationId}/read`, {
             method: "PUT",
             headers: {
                 Authorization:
@@ -578,7 +588,7 @@ if (profileForm) {
         const address = document.getElementById("profile-address").value.trim();
 
         try {
-            const response = await fetch(`${API_URL}/api/profile`, {
+            const response = await apiFetch(`${API_URL}/api/profile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -1001,7 +1011,7 @@ async function loadCheckoutUserPoints() {
     if (!pointsBox || !token) return;
 
     try {
-        const response = await fetch(`${API_URL}/api/profile`, {
+        const response = await apiFetch(`${API_URL}/api/profile`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -1084,7 +1094,7 @@ async function saveOrder(orderData) {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`${API_URL}/api/orders`, {
+        const response = await apiFetch(`${API_URL}/api/orders`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -1153,7 +1163,7 @@ async function createOrderFromPaystackReference(reference) {
     );
 
     try {
-        const response = await fetch(`${API_URL}/api/orders/paystack/${encodeURIComponent(reference)}`, {
+        const response = await apiFetch(`${API_URL}/api/orders/paystack/${encodeURIComponent(reference)}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1492,7 +1502,7 @@ if (checkoutForm) {
                 );
 
             try {
-                const response = await fetch(`${API_URL}/api/payments/initialize`, {
+                const response = await apiFetch(`${API_URL}/api/payments/initialize`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -1557,7 +1567,7 @@ async function cancelOrder(orderId) {
     try {
 
         // Send cancel request to backend
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/orders/${orderId}/cancel`,
             {
                 method: "PUT",
@@ -1685,7 +1695,7 @@ if (mealsContainer) {
         </div>
     `;
 
-    fetch(`${API_URL}/api/meals`)
+    apiFetch(`${API_URL}/api/meals`)
 
         .then(response => {
             if (!response.ok) {
@@ -1971,7 +1981,7 @@ if(loginForm){
 
         try{
 
-            const response = await fetch(`${API_URL}/api/login`,
+            const response = await apiFetch(`${API_URL}/api/login`,
 
 
                 {
@@ -2082,7 +2092,7 @@ if(registerForm){
 
         try{
 
-            const response = await fetch(
+            const response = await apiFetch(
 
                 `${API_URL}/api/register`,
 
@@ -2293,7 +2303,7 @@ document.addEventListener("click", (e) => {
 
 const token = localStorage.getItem("token");
 
-fetch(`${API_URL}/api/orders/${loggedUser.id}`, {
+apiFetch(`${API_URL}/api/orders/${loggedUser.id}`, {
     method: "GET",
     headers: {
         Authorization: `Bearer ${token}`
@@ -2695,7 +2705,7 @@ function loadAdminOrders(page = 1){
         </div>
     `;
 
-    fetch(`${API_URL}/api/admin/orders?page=${page}&limit=${adminLimit}`, {
+    apiFetch(`${API_URL}/api/admin/orders?page=${page}&limit=${adminLimit}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -2977,7 +2987,7 @@ document.addEventListener("change", async (e) => {
 
         try {
 
-const response = await fetch(`${API_URL}/api/admin/orders/${orderId}`,
+const response = await apiFetch(`${API_URL}/api/admin/orders/${orderId}`,
 
                 {
 
@@ -3081,7 +3091,7 @@ if (addMealForm) {
             // Backend uploads image to Cloudinary
             // =========================
 
-            const response = await fetch(`${API_URL}/api/admin/meals`, {
+            const response = await apiFetch(`${API_URL}/api/admin/meals`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -3131,7 +3141,7 @@ if (adminMealsContainer) {
         </div>
     `;
 
-    fetch(`${API_URL}/api/admin/meals`, {
+    apiFetch(`${API_URL}/api/admin/meals`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -3269,7 +3279,7 @@ document.addEventListener("click", async (e) => {
 
         try {
 
-const response = await fetch(`${API_URL}/api/admin/meals/${mealId}`, {
+const response = await apiFetch(`${API_URL}/api/admin/meals/${mealId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -3404,7 +3414,7 @@ if (editMealForm) {
 
             try {
 
-                const response = await fetch(
+                const response = await apiFetch(
 
                     `${API_URL}/api/admin/meals/${id}`,
 
@@ -3475,7 +3485,7 @@ const statusChartCanvas =
 
 if (revenueChartCanvas && statusChartCanvas) {
 
-    fetch(`${API_URL}/api/admin/analytics`, {
+    apiFetch(`${API_URL}/api/admin/analytics`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -3596,7 +3606,7 @@ async function toggleFavorite(mealId) {
 
     try {
 
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/favorites`,
             {
                 method: "POST",
@@ -4014,7 +4024,7 @@ async function loadMealReviews(mealId) {
     if (!reviewsBox) return;
 
     try {
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/meals/${mealId}/reviews`
         );
 
@@ -4101,7 +4111,7 @@ document.addEventListener("click", async (e) => {
 
     try {
 
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/meals/${mealId}/reviews`,
             {
                 method: "POST",
@@ -4162,7 +4172,7 @@ const featuredMealsContainer =
 
 if (featuredMealsContainer) {
 
-    fetch(`${API_URL}/api/home/featured-meals`, {
+    apiFetch(`${API_URL}/api/home/featured-meals`, {
         headers: {
             "ngrok-skip-browser-warning": "true"
         }
@@ -4313,7 +4323,7 @@ async function registerPushNotifications() {
                 )
             });
 
-        await fetch(`${API_URL}/api/push/subscribe`, {
+        await apiFetch(`${API_URL}/api/push/subscribe`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -4358,7 +4368,7 @@ function loadKitchenQueue() {
     deliveryBox.innerHTML = "";
     completedBox.innerHTML = "";
 
-    fetch(`${API_URL}/api/admin/orders?page=1&limit=100`, {
+    apiFetch(`${API_URL}/api/admin/orders?page=1&limit=100`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -4501,7 +4511,7 @@ const adminCustomersContainer =
 
 if (adminCustomersContainer) {
 
-    fetch(`${API_URL}/api/admin/customers`, {
+    apiFetch(`${API_URL}/api/admin/customers`, {
         headers: {
             Authorization:
             `Bearer ${localStorage.getItem("token")}`
@@ -4582,7 +4592,7 @@ document.addEventListener("click", async (e) => {
 
     try {
 
-        const response = await fetch(
+        const response = await apiFetch(
 
             `${API_URL}/api/admin/orders/${orderId}/archive`,
 
@@ -4649,7 +4659,7 @@ if (couponForm) {
         const usageLimit = document.getElementById("usage-limit").value;
 
         try {
-            const response = await fetch(`${API_URL}/api/admin/coupons`, {
+            const response = await apiFetch(`${API_URL}/api/admin/coupons`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -4719,7 +4729,7 @@ if (applyCouponBtn) {
         const total = subtotal + deliveryFee;
 
         try {
-            const response = await fetch(`${API_URL}/api/coupons/validate`, {
+            const response = await apiFetch(`${API_URL}/api/coupons/validate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -4833,7 +4843,7 @@ function loadAdminCoupons() {
 
     if (!adminCouponsContainer) return;
 
-    fetch(`${API_URL}/api/admin/coupons`, {
+    apiFetch(`${API_URL}/api/admin/coupons`, {
         headers: {
             Authorization:
             `Bearer ${localStorage.getItem("token")}`
@@ -4962,7 +4972,7 @@ document.addEventListener("click", async (e) => {
     if (!confirmDelete) return;
 
     try {
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/admin/coupons/${couponId}`,
             {
                 method: "DELETE",
@@ -5038,7 +5048,7 @@ function loadCustomSalesReport() {
         </div>
     `;
 
-    fetch(`${API_URL}/api/admin/sales-reports/custom?start=${startDate}&end=${endDate}`, {
+    apiFetch(`${API_URL}/api/admin/sales-reports/custom?start=${startDate}&end=${endDate}`, {
         headers: {
             Authorization:
             `Bearer ${localStorage.getItem("token")}`
@@ -5232,7 +5242,7 @@ async function hideUserOrder(orderId) {
     if (!confirmRemove) return;
 
     try {
-        const response = await fetch(`${API_URL}/api/orders/${orderId}/hide`, {
+        const response = await apiFetch(`${API_URL}/api/orders/${orderId}/hide`, {
             method: "PUT",
             headers: {
                 Authorization:
@@ -5285,7 +5295,7 @@ if (cateringForm) {
 
         try {
 
-            const response = await fetch(`${API_URL}/api/catering-requests`, {
+            const response = await apiFetch(`${API_URL}/api/catering-requests`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -5324,7 +5334,7 @@ const adminCateringContainer =
 
 if (adminCateringContainer) {
 
-    fetch(`${API_URL}/api/admin/catering-requests`, {
+    apiFetch(`${API_URL}/api/admin/catering-requests`, {
         headers: {
             Authorization:
             `Bearer ${localStorage.getItem("token")}`
@@ -5478,7 +5488,7 @@ if (supportForm) {
 
         try {
 
-            const response = await fetch(`${API_URL}/api/support-messages`, {
+            const response = await apiFetch(`${API_URL}/api/support-messages`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -5517,7 +5527,7 @@ const adminSupportContainer =
 
 if (adminSupportContainer) {
 
-    fetch(`${API_URL}/api/admin/support-messages`, {
+    apiFetch(`${API_URL}/api/admin/support-messages`, {
         headers: {
             Authorization:
             `Bearer ${localStorage.getItem("token")}`
@@ -5638,7 +5648,7 @@ document.addEventListener("click", async (e) => {
 
         const id = e.target.dataset.id;
 
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/admin/support-messages/${id}/resolve`,
             {
                 method: "PUT",
@@ -5667,7 +5677,7 @@ document.addEventListener("click", async (e) => {
 
         if (!confirm("Delete this support message?")) return;
 
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/admin/support-messages/${id}`,
             {
                 method: "DELETE",
@@ -5707,7 +5717,7 @@ document.addEventListener("click", async (e) => {
     if (!confirmDelete) return;
 
     try {
-        const response = await fetch(
+        const response = await apiFetch(
             `${API_URL}/api/admin/catering-requests/${requestId}`,
             {
                 method: "DELETE",
