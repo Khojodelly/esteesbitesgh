@@ -8,9 +8,6 @@ console.log("script connected");
 const API_URL = "https://esteesbites-backend.onrender.com";
 
 
-// =========================
-// IMAGE HELPER
-// =========================
 
 function getMealImage(imagePath) {
 
@@ -18,30 +15,27 @@ function getMealImage(imagePath) {
         return "images/default-food.jpg";
     }
 
+    if (imagePath.includes("localhost:5000")) {
+        return imagePath.replace(
+            "http://localhost:5000",
+            API_URL
+        );
+    }
+
     if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
         return imagePath;
     }
 
-    if (imagePath.startsWith("/uploads")) {
+    if (imagePath.startsWith("/uploads") || imagePath.startsWith("/images")) {
         return `${API_URL}${imagePath}`;
     }
 
-    if (imagePath.startsWith("uploads/")) {
+    if (imagePath.startsWith("uploads/") || imagePath.startsWith("images/")) {
         return `${API_URL}/${imagePath}`;
-    }
-
-    if (imagePath.startsWith("/images")) {
-        return `${API_URL}${imagePath}`;
-    }
-
-    if (imagePath.startsWith("images/")) {
-        return imagePath;
     }
 
     return imagePath;
 }
-
-
 
 // =========================
 // ESTEESBITES CART SYSTEM
@@ -1708,7 +1702,7 @@ if(darkModeToggle){
 }
 
 // =========================
-// FETCH MEALS FROM BACKEND
+// MEALS FROM BACKEND
 // =========================
 
 const mealsContainer =
@@ -4205,8 +4199,6 @@ if (featuredMealsContainer) {
         .then(response => response.json())
 
         .then(meals => {
-
-            
 
             featuredMealsContainer.innerHTML = "";
 
