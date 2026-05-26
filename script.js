@@ -5,7 +5,7 @@ console.log("script connected");
 // Change this when deploying
 // =========================
 
-const API_URL = "https://your-render-backend.onrender.com";
+const API_URL = "https://esteesbites-backend.onrender.com";
 
 
 
