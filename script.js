@@ -8,6 +8,40 @@ console.log("script connected");
 const API_URL = "https://esteesbites-backend.onrender.com";
 
 
+// =========================
+// IMAGE HELPER
+// =========================
+
+function getMealImage(imagePath) {
+
+    if (!imagePath) {
+        return "images/default-food.jpg";
+    }
+
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+    }
+
+    if (imagePath.startsWith("/uploads")) {
+        return `${API_URL}${imagePath}`;
+    }
+
+    if (imagePath.startsWith("uploads/")) {
+        return `${API_URL}/${imagePath}`;
+    }
+
+    if (imagePath.startsWith("/images")) {
+        return `${API_URL}${imagePath}`;
+    }
+
+    if (imagePath.startsWith("images/")) {
+        return imagePath;
+    }
+
+    return imagePath;
+}
+
+
 
 // =========================
 // ESTEESBITES CART SYSTEM
@@ -299,10 +333,12 @@ if (profileForm) {
 
                 favorites.forEach(meal => {
 
+                    const mealImage = getMealImage(meal.image || meal.image_url);
+
                     favoriteMealsList.innerHTML += `
                         <div class="favorite-meal-card">
 
-                            <img src="${meal.image}" alt="${meal.name}">
+                            <img src="${mealImage}" alt="${meal.name}">
 
                             <div>
                                 <strong>${meal.name}</strong>
@@ -4170,6 +4206,8 @@ if (featuredMealsContainer) {
 
         .then(meals => {
 
+            
+
             featuredMealsContainer.innerHTML = "";
 
             if (!meals || meals.length === 0) {
@@ -4186,12 +4224,14 @@ if (featuredMealsContainer) {
                 const rating =
                     Number(meal.average_rating).toFixed(1);
 
+                const mealImage = getMealImage(meal.image || meal.image_url);
+
                 featuredMealsContainer.innerHTML += `
                     <div class="col-lg-4 col-md-6 reveal-zoom">
 
                         <div class="featured-meal-card hover-lift">
 
-                            <img src="${meal.image}" alt="${meal.name}">
+                            <img src="${mealImage}" alt="${meal.name}">
 
                             <div class="featured-meal-body">
 
