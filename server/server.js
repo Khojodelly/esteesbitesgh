@@ -1992,17 +1992,16 @@ app.get("/api/notifications", authenticateToken, (req, res) => {
 });
 
 // =========================
-// MARK NOTIFICATION AS READ
+// USER: DELETE NOTIFICATION AFTER READING
 // =========================
 
-app.put("/api/notifications/:id/read", authenticateToken, (req, res) => {
+app.delete("/api/notifications/:id", authenticateToken, (req, res) => {
 
     const notificationId = req.params.id;
     const userId = req.user.id;
 
     const sql = `
-        UPDATE notifications
-        SET is_read = TRUE
+        DELETE FROM notifications
         WHERE id = ?
         AND user_id = ?
     `;
@@ -2012,12 +2011,12 @@ app.put("/api/notifications/:id/read", authenticateToken, (req, res) => {
         if (err) {
             console.log(err);
             return res.status(500).json({
-                message: "Database error"
+                message: "Failed to remove notification"
             });
         }
 
         res.json({
-            message: "Notification marked as read"
+            message: "Notification removed"
         });
     });
 });

@@ -507,65 +507,37 @@ if (profileForm) {
         // =========================
 
         window.markNotificationAsRead =
-        async function (notificationId) {
+        async function markNotificationAsRead(notificationId) {
 
-            try {
+     try {
 
-                const response = await fetch(
-
-                    `${API_URL}/api/notifications/${notificationId}/read`,
-
-                    {
-                        method: "PUT",
-
-                        headers: {
-                            Authorization:
-                            `Bearer ${token}`
-                        }
-                    }
-
-                );
-
-                const data =
-                    await response.json();
-
-                if (!response.ok) {
-
-                    showToast(
-                        data.message,
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-                showToast(
-                    "Notification marked as read",
-                    "success"
-                );
-
-                // Reload notifications
-                loadNotifications();
-
+        const response = await fetch(`${API_URL}/api/notifications/${notificationId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization:
+                `Bearer ${localStorage.getItem("token")}`
             }
+        });
 
-            catch (error) {
+        const data = await response.json();
 
-                console.log(error);
+        if (!response.ok) {
+            showToast(data.message || "Failed to remove notification", "error");
+            return;
+        }
 
-                showToast(
-                    "Failed to mark notification",
-                    "error"
-                );
+        showToast("Notification removed", "success");
 
-            }
+        loadProfileNotifications();
 
-        };
+     } catch (error) {
+        console.log(error);
+        showToast("Something went wrong", "error");
+     }
+     };
+   }
 
-    }
-
-    loadProfile();
+     loadProfile();
 
         // =========================
         // AUTO READ NOTIFICATIONS
@@ -4489,6 +4461,9 @@ function loadKitchenQueue() {
             `;
 
             if (order.status === "Pending") {
+                pendingBox.innerHTML += card;
+            }
+            else if (order.status === "Received") {
                 pendingBox.innerHTML += card;
             }
 

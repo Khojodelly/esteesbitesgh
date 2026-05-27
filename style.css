@@ -3215,3 +3215,86 @@ SALES REPORTS
         text-align: center;
     }
 }
+
+/* =========================
+   IPHONE / SMALL MOBILE FIX
+========================= */
+
+@media (max-width: 430px) {
+
+    .custom-navbar {
+        padding: 14px 0;
+    }
+
+    .navbar-brand {
+        font-size: 28px !important;
+        letter-spacing: 3px;
+    }
+
+    .mobile-nav-actions {
+        gap: 8px;
+    }
+
+    .nav-profile-avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+
+    .navbar-toggler {
+        width: 52px;
+        height: 52px;
+        padding: 8px;
+        border-radius: 14px;
+    }
+
+    .menu-hero,
+    .menu-section {
+        padding-top: 45px !important;
+    }
+
+    .menu-title,
+    .menu-hero h1 {
+        font-size: 54px !important;
+        line-height: 1.05;
+    }
+
+    .menu-small-title {
+        font-size: 22px;
+    }
+
+    .menu-subtitle {
+        font-size: 15px;
+        margin-bottom: 28px;
+    }
+
+    .category-filter,
+    .menu-filters {
+        gap: 14px;
+        justify-content: center;
+    }
+
+    .category-filter button,
+    .filter-btn {
+        min-width: 140px;
+        padding: 16px 24px;
+        font-size: 18px;
+        border-radius: 28px;
+    }
+
+    .floating-cart-btn,
+    .floating-support-btn {
+        right: 18px;
+        width: 58px;
+        height: 58px;
+        font-size: 23px;
+    }
+
+    .floating-cart-btn {
+        bottom: 82px;
+    }
+
+    .floating-support-btn {
+        bottom: 150px;
+    }
+}
