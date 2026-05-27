@@ -788,7 +788,7 @@ function renderCart() {
 
     });
 
-    const deliveryFee = 10;
+    const deliveryFee = 0;
 
     const total =
         subtotal + deliveryFee;
@@ -2665,7 +2665,7 @@ if (checkoutSummaryItems) {
 
         });
 
-        const deliveryFee = 10;
+        const deliveryFee = 0;
 
         checkoutSubtotal.textContent =
             `GH₵ ${subtotal}`;
@@ -4720,7 +4720,7 @@ if (applyCouponBtn) {
             subtotal += item.price * item.quantity;
         });
 
-        const deliveryFee = 10;
+        const deliveryFee = 0;
         const total = subtotal + deliveryFee;
 
         try {
@@ -4780,7 +4780,7 @@ function updateCheckoutSummaryWithDiscount() {
         subtotal += item.price * item.quantity;
     });
 
-    const deliveryFee = 10;
+    const deliveryFee = 0;
 
     const totalBeforeDiscount =
         subtotal + deliveryFee;
