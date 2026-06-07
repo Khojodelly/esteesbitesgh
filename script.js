@@ -6,6 +6,7 @@ console.log("script connected");
 // =========================
 
 const API_URL = "https://esteesbites-backend.onrender.com";
+//const API_URL = "http://localhost:5000";
 
 
 
@@ -418,21 +419,19 @@ if (profileForm) {
                 const notifications =
                     await response.json();
 
-                   
-                // Unread count
-                const unread =
+                const unreadNotifications =
                     notifications.filter(
                         notification => !notification.is_read
-                    ).length;
+                    );
 
                 notificationCount.textContent =
-                    unread;
+                    unreadNotifications.length;
 
-                if (notifications.length === 0) {
+                if (unreadNotifications.length === 0) {
 
                     notificationsList.innerHTML = `
                         <p class="text-muted">
-                            No notifications yet.
+                            No new notifications.
                         </p>
                     `;
 
@@ -441,15 +440,10 @@ if (profileForm) {
 
                     notificationsList.innerHTML = "";
 
-                    notifications.forEach(notification => {
-
-                        const notificationClass =
-                            notification.is_read
-                                ? "notification-read"
-                                : "unread";
+                    unreadNotifications.forEach(notification => {
 
                         notificationsList.innerHTML += `
-                            <div class="notification-card ${notificationClass}"
+                            <div class="notification-card unread"
                                 data-id="${notification.id}">
 
                                 <div class="d-flex justify-content-between gap-3">
@@ -468,8 +462,6 @@ if (profileForm) {
 
                                     </div>
 
-                                    ${!notification.is_read ? `
-
                                         <button
                                             class="btn btn-sm btn-dark mark-read-btn"
                                             data-id="${notification.id}">
@@ -477,8 +469,6 @@ if (profileForm) {
                                             Mark Read
 
                                         </button>
-
-                                    ` : ""}
 
                                 </div>
 
@@ -552,7 +542,7 @@ if (profileForm) {
     const card = e.target.closest(".notification-card");
 
     try {
-        await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
+        const response = await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
             method: "PUT",
             headers: {
                 Authorization:
@@ -560,14 +550,20 @@ if (profileForm) {
             }
         });
 
-        card.style.opacity = "0";
-
-        setTimeout(() => {
-            card.remove();
-        }, 400);
+        if (response.ok) {
+            // Fade out animation
+            card.style.opacity = "0";
+            
+            setTimeout(() => {
+                card.remove();
+                // Reload notifications to update the count
+                loadNotifications();
+            }, 400);
+        }
 
     } catch (error) {
         console.log(error);
+        showToast("Failed to mark notification as read", "error");
     }
 });
 
@@ -4424,10 +4420,11 @@ function loadKitchenQueue() {
                     <select class="form-select mt-3 status-select"
                             data-id="${order.id}">
                         <option value="Pending" ${order.status === "Pending" ? "selected" : ""}>Pending</option>
+                        <option value="Accepted" ${order.status === "Accepted" ? "selected" : ""}>Accepted</option>
+                        <option value="Received" ${order.status === "Received" ? "selected" : ""}>Received</option>
                         <option value="Preparing" ${order.status === "Preparing" ? "selected" : ""}>Preparing</option>
                         <option value="Delivery" ${order.status === "Delivery" ? "selected" : ""}>Delivery</option>
                         <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
-                        <option value="Received" ${order.status === "Received" ? "selected" : ""}>Received</option>
                         <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
                     </select>
 
@@ -4463,7 +4460,7 @@ function loadKitchenQueue() {
             if (order.status === "Pending") {
                 pendingBox.innerHTML += card;
             }
-            else if (order.status === "Received") {
+             else if (order.status === "Accepted") {
                 pendingBox.innerHTML += card;
             }
 
@@ -4478,12 +4475,8 @@ function loadKitchenQueue() {
             else if (
                 order.status === "Delivered" ||
                 order.status === "Received"
-
-                
             ) {
-                
                 completedBox.innerHTML += card;
-                
             }
 
         });
@@ -4498,26 +4491,40 @@ function loadKitchenQueue() {
 loadKitchenQueue();
 
 // =========================
-// ADMIN: LOAD CUSTOMERS
+// ADMIN: LOAD CUSTOMERS WITH PAGINATION
 // =========================
+
+let customerCurrentPage = 1;
+const customerLimit = 10;
 
 const adminCustomersContainer =
     document.getElementById("admin-customers-container");
 
-if (adminCustomersContainer) {
+const adminCustomersPagination =
+    document.getElementById("admin-customers-pagination");
 
-    fetch(`${API_URL}/api/admin/customers`, {
+function loadAdminCustomers(page = 1) {
+
+    if (!adminCustomersContainer) return;
+
+    adminCustomersContainer.innerHTML = `
+        <div class="loading-box">
+            <div class="loading-spinner"></div>
+            Loading customers...
+        </div>
+    `;
+
+    fetch(`${API_URL}/api/admin/customers?page=${page}&limit=${customerLimit}`, {
         headers: {
-            Authorization:
-            `Bearer ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${localStorage.getItem("token")}`
         }
     })
-
     .then(response => response.json())
+    .then(data => {
 
-    .then(customers => {
+        const customers = data.customers || [];
 
-        if (!customers || customers.length === 0) {
+        if (customers.length === 0) {
             adminCustomersContainer.innerHTML = `
                 <div class="alert alert-warning">
                     No customers found.
@@ -4529,15 +4536,14 @@ if (adminCustomersContainer) {
         let rows = "";
 
         customers.forEach(customer => {
-
             rows += `
                 <tr>
                     <td>${customer.fullname}</td>
                     <td>${customer.phone || "Not added"}</td>
                     <td>${customer.email}</td>
+                    <td>${customer.address || "Not added"}</td>
                 </tr>
             `;
-
         });
 
         adminCustomersContainer.innerHTML = `
@@ -4548,6 +4554,7 @@ if (adminCustomersContainer) {
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Email</th>
+                            <th>Address</th>
                         </tr>
                     </thead>
 
@@ -4558,8 +4565,9 @@ if (adminCustomersContainer) {
             </div>
         `;
 
-    })
+        renderCustomersPagination(data.page, data.totalPages);
 
+    })
     .catch(error => {
         console.log(error);
 
@@ -4569,8 +4577,58 @@ if (adminCustomersContainer) {
             </div>
         `;
     });
-
 }
+
+function renderCustomersPagination(currentPage, totalPages) {
+
+    if (!adminCustomersPagination) return;
+
+    adminCustomersPagination.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    adminCustomersPagination.innerHTML += `
+        <button class="btn btn-outline-dark me-2 customer-page-btn"
+                data-page="${currentPage - 1}"
+                ${currentPage === 1 ? "disabled" : ""}>
+            Previous
+        </button>
+    `;
+
+    for (let i = 1; i <= totalPages; i++) {
+        adminCustomersPagination.innerHTML += `
+            <button class="btn ${i === currentPage ? "btn-dark" : "btn-outline-dark"} me-2 customer-page-btn"
+                    data-page="${i}">
+                ${i}
+            </button>
+        `;
+    }
+
+    adminCustomersPagination.innerHTML += `
+        <button class="btn btn-outline-dark customer-page-btn"
+                data-page="${currentPage + 1}"
+                ${currentPage === totalPages ? "disabled" : ""}>
+            Next
+        </button>
+    `;
+}
+
+document.addEventListener("click", (e) => {
+
+    if (e.target.classList.contains("customer-page-btn")) {
+
+        const page = Number(e.target.dataset.page);
+
+        if (page > 0) {
+            customerCurrentPage = page;
+            loadAdminCustomers(customerCurrentPage);
+        }
+
+    }
+
+});
+
+loadAdminCustomers();
 
 // =========================
 // ARCHIVE ORDER FROM QUEUE

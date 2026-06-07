@@ -3298,3 +3298,263 @@ SALES REPORTS
         bottom: 150px;
     }
 }
+
+/* ==========================================
+   ESTEESBITES MOBILE MENU APP STYLE
+========================================== */
+
+@media (max-width: 768px) {
+
+    /* Main menu container */
+    #meals-container,
+    .meals-container {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        padding: 0 14px;
+    }
+
+    /* Remove Bootstrap column behavior on mobile */
+    #meals-container .menu-item,
+    .meals-container .menu-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Card */
+    .meal-card {
+        border: 1px solid rgba(255, 90, 31, 0.25);
+        border-radius: 18px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        height: 100%;
+    }
+
+    /* Image wrapper */
+    .meal-card-img-wrapper {
+        position: relative;
+        height: 135px;
+        background: #f8f8f8;
+        overflow: hidden;
+    }
+
+    .meal-card-img-wrapper .menu-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* Status badge */
+    .meal-category-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        z-index: 2;
+        background: #ffb703;
+        color: #111;
+        max-width: 105px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .meal-category-badge.available {
+        background: #ffb703;
+        color: #111;
+    }
+
+    .meal-category-badge.preorder {
+        background: #2563eb;
+        color: #fff;
+    }
+
+    .meal-category-badge.soldout {
+        background: #dc2626;
+        color: #fff;
+    }
+
+    .meal-category-badge.limited {
+        background: #9333ea;
+        color: #fff;
+    }
+
+    .meal-category-badge.event {
+        background: #111827;
+        color: #fff;
+    }
+
+    /* Favorite icon */
+    .favorite-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255,255,255,0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        box-shadow: 0 5px 14px rgba(0,0,0,0.15);
+        z-index: 3;
+    }
+
+    /* Body */
+    .meal-card-body {
+        padding: 12px;
+        min-height: 158px;
+    }
+
+    .meal-title {
+        text-align: left !important;
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.25;
+        min-height: 38px;
+        margin-bottom: 8px;
+        color: #111827;
+    }
+
+    .meal-footer-info {
+        margin-bottom: 8px;
+    }
+
+    .meal-price {
+        display: block;
+        color: #071064;
+        font-size: 19px;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .add-cart-btn,
+    .meal-card .btn {
+        width: 100%;
+        border-radius: 22px;
+        padding: 8px 10px;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    /* Menu page heading spacing */
+    .menu-section,
+    .menu-hero {
+        padding-top: 38px !important;
+    }
+
+    .menu-title,
+    .menu-hero h1 {
+        font-size: 50px !important;
+        line-height: 1.05;
+        margin-bottom: 18px;
+    }
+
+    .menu-small-title {
+        font-size: 22px;
+    }
+
+    /* Category buttons/chips */
+    .menu-categories,
+    .category-container,
+    .category-filter {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        gap: 10px;
+        padding: 0 14px 14px;
+        justify-content: flex-start !important;
+        scrollbar-width: none;
+    }
+
+    .menu-categories::-webkit-scrollbar,
+    .category-container::-webkit-scrollbar,
+    .category-filter::-webkit-scrollbar {
+        display: none;
+    }
+
+    .category-btn,
+    .filter-btn {
+        flex: 0 0 auto;
+        min-width: 110px;
+        border-radius: 28px;
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    /* Floating support/cart buttons */
+    .floating-support-btn {
+        right: 18px;
+        bottom: 150px;
+        width: 58px;
+        height: 58px;
+    }
+
+    .floating-cart-btn {
+        right: 18px;
+        bottom: 82px;
+        width: 58px;
+        height: 58px;
+    }
+}
+
+/* Extra small phones */
+@media (max-width: 360px) {
+
+    #meals-container,
+    .meals-container {
+        gap: 10px;
+        padding: 0 10px;
+    }
+
+    .meal-card-img-wrapper {
+        height: 120px;
+    }
+
+    .meal-title {
+        font-size: 14px;
+    }
+
+    .meal-price {
+        font-size: 17px;
+    }
+
+    .meal-card-body {
+        padding: 10px;
+    }
+}
+
+.floating-menu-btn {
+    position: fixed;
+    right: 18px;
+    bottom: 218px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #ff5a1f;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 23px;
+    z-index: 999;
+    box-shadow: 0 12px 30px rgba(255, 90, 31, 0.35);
+    transition: 0.3s ease;
+}
+
+.floating-menu-btn:hover {
+    transform: translateY(-6px) scale(1.05);
+    color: #fff;
+}

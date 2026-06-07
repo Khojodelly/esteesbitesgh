@@ -458,8 +458,8 @@ function createNotification(userId, message) {
 
     const sql = `
         INSERT INTO notifications
-        (user_id, message)
-        VALUES (?, ?)
+        (user_id, message, is_read)
+        VALUES (?, ?, 0)
     `;
 
     db.query(sql, [userId, message], (err) => {
@@ -1992,6 +1992,37 @@ app.get("/api/notifications", authenticateToken, (req, res) => {
 });
 
 // =========================
+// USER: MARK NOTIFICATION AS READ
+// =========================
+
+app.put("/api/notifications/:id/read", authenticateToken, (req, res) => {
+
+    const notificationId = req.params.id;
+    const userId = req.user.id;
+
+    const sql = `
+        UPDATE notifications
+        SET is_read = 1
+        WHERE id = ?
+        AND user_id = ?
+    `;
+
+    db.query(sql, [notificationId, userId], (err) => {
+
+        if (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Failed to mark notification as read"
+            });
+        }
+
+        res.json({
+            message: "Notification marked as read"
+        });
+    });
+});
+
+// =========================
 // USER: DELETE NOTIFICATION AFTER READING
 // =========================
 
@@ -2229,34 +2260,59 @@ function sendPushNotification(userId, title, body) {
 }
 
 // =========================
-// ADMIN: GET ALL CUSTOMERS
-// Shows customer name, phone, and email
+// ADMIN: GET CUSTOMERS WITH PAGINATION
 // =========================
 
 app.get("/api/admin/customers", authenticateToken, (req, res) => {
 
-    const sql = `
-        SELECT 
-            id,
-            fullname,
-            phone,
-            email
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const countSql = `
+        SELECT COUNT(*) AS total
         FROM users
-        ORDER BY id DESC
+        WHERE role != 'admin'
     `;
 
-    db.query(sql, (err, results) => {
+    const sql = `
+        SELECT id, fullname, phone, email, address
+        FROM users
+        WHERE role != 'admin'
+        ORDER BY id DESC
+        LIMIT ? OFFSET ?
+    `;
+
+    db.query(countSql, (err, countResult) => {
 
         if (err) {
-            console.log(err);
-
             return res.status(500).json({
                 message: "Database error"
             });
         }
 
-        res.json(results);
+        db.query(sql, [limit, offset], (err, results) => {
+
+            if (err) {
+                return res.status(500).json({
+                    message: "Database error"
+                });
+            }
+
+            const total = countResult[0].total;
+            const totalPages = Math.ceil(total / limit);
+
+            res.json({
+                customers: results,
+                page,
+                total,
+                totalPages
+            });
+
+        });
+
     });
+
 });
 
 
@@ -2869,6 +2925,23 @@ app.delete("/api/admin/support-messages/:id", authenticateToken, (req, res) => {
             message: "Support message deleted"
         });
     });
+});
+
+// =========================
+// DATABASE MIGRATION
+// Add is_read column to notifications if it doesn't exist
+// =========================
+
+db.query(`
+    ALTER TABLE notifications 
+    ADD COLUMN is_read TINYINT DEFAULT 0 
+    AFTER message
+`, (err) => {
+    if (err && err.code !== 'ER_DUP_FIELDNAME') {
+        console.log("Migration info:", err.message);
+    } else if (!err) {
+        console.log("Notifications table updated with is_read column");
+    }
 });
 
 // START SERVER
