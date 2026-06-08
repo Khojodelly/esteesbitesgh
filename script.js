@@ -3916,7 +3916,8 @@ document.addEventListener("click", (e) => {
     const price = card.dataset.price;
     const image = card.dataset.image;
     const category = card.dataset.category;
-    const status = card.dataset.status;
+    const rawStatus = card.dataset.status || 'Available Today';
+    const status = (window.restaurantStatus && String(window.restaurantStatus.status).toLowerCase() === 'closed' && rawStatus === 'Available Today') ? 'Preorder' : rawStatus;
 
     document.getElementById("quick-view-image").src = image;
     document.getElementById("quick-view-name").textContent = name;
@@ -6133,6 +6134,8 @@ function loadRestaurantStatus() {
 
     });
 
+    updateMealButtons();
+
 }
 
 // =========================
@@ -6174,9 +6177,53 @@ function loadCustomerRestaurantStatus() {
             }
 
         })
+        .then(() => updateMealButtons())
         .catch(console.log);
 }
 
 loadCustomerRestaurantStatus();
+
+
+// Update meal card buttons and quick-view when restaurant status changes
+function updateMealButtons() {
+    const cards = document.querySelectorAll('.meal-card');
+    const restaurantClosed = window.restaurantStatus && String(window.restaurantStatus.status).toLowerCase() === 'closed';
+
+    cards.forEach(card => {
+        const statusRaw = card.dataset.status || 'Available Today';
+        const status = (restaurantClosed && statusRaw === 'Available Today') ? 'Preorder' : statusRaw;
+
+        // Update category badge text if present
+        const badge = card.querySelector('.meal-category-badge');
+        if (badge) badge.textContent = statusRaw;
+
+        // Find the main action button inside the card
+        let btn = card.querySelector('button.add-cart-btn');
+        if (!btn) btn = card.querySelector('.meal-card-body button');
+        if (!btn) return;
+
+        if (status === 'Sold Out') {
+            btn.textContent = 'Sold Out';
+            btn.className = 'btn btn-secondary w-100';
+            btn.disabled = true;
+        } else if (status === 'Preorder') {
+            btn.textContent = 'Preorder Now';
+            btn.className = 'btn btn-dark w-100 add-cart-btn add-to-cart';
+            btn.disabled = false;
+        } else if (status === 'Event Only') {
+            btn.textContent = 'Contact for Booking';
+            btn.className = 'btn btn-outline-primary w-100';
+            btn.disabled = false;
+        } else if (status === 'Limited') {
+            btn.textContent = 'Order Limited Meal';
+            btn.className = 'btn btn-dark w-100 add-cart-btn add-to-cart';
+            btn.disabled = false;
+        } else {
+            btn.textContent = 'Add to Cart';
+            btn.className = 'btn btn-dark w-100 add-cart-btn add-to-cart';
+            btn.disabled = false;
+        }
+    });
+}
 
 
