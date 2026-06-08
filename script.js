@@ -5,8 +5,8 @@ console.log("script connected");
 // Change this when deploying
 // =========================
 
-const API_URL = "https://esteesbites-backend.onrender.com";
-//const API_URL = "http://localhost:5000";
+//const API_URL = "https://esteesbites-backend.onrender.com";
+const API_URL = "http://localhost:5000";
 
 
 
@@ -1581,6 +1581,8 @@ if (checkoutForm) {
         // PREPARE ORDER DATA
         // =========================
 
+        const hasPreorderItem = cart.some(item => String(item.order_type).toLowerCase() === "preorder");
+
         const orderData = {
             user_id: loggedUser.id,
             email: loggedUser.email,
@@ -1591,7 +1593,7 @@ if (checkoutForm) {
             address,
             city,
             payment_method: paymentMethod,
-            order_type: orderType,
+            order_type: hasPreorderItem ? "preorder" : orderType,
             preferred_date: preferredDate,
             preferred_time: preferredTime,
             special_notes: specialNotes,
@@ -1918,7 +1920,7 @@ if (mealsContainer) {
                 }
 
                 else if (mealStatus === "Limited") {
-                    buttonText = "Order Limited Meal";
+                    buttonText = "Meal Limited";
                     extraCardClass = "limited-pulse";
                 }
 
@@ -1929,7 +1931,7 @@ if (mealsContainer) {
                 }
 
                 else if (mealStatus === "Event Only") {
-                    buttonText = "Contact for Booking";
+                    buttonText = "Contact Now";
                     buttonClass = "btn btn-outline-primary w-100";
                 }
 
@@ -4551,6 +4553,10 @@ function loadKitchenQueue() {
                     </div>
                 `).join("");
 
+            const isPreorder =
+                String(order.order_type || "").toLowerCase() === "preorder" ||
+                items.some(item => String(item.order_type || "").toLowerCase() === "preorder");
+
             const card = `
                 <div class="kitchen-order-card">
 
@@ -4566,9 +4572,11 @@ function loadKitchenQueue() {
 
                     <small class="text-muted d-block mb-2">
 
-                        ${order.order_type === "preorder"
-                            ? `🟠 PREORDER • 📅 ${new Date(order.preferred_date).toLocaleDateString()} • 🕒 ${order.preferred_time}`
-                            : `🟢 ORDER NOW `
+                        ${isPreorder
+                            ? `🟠 PREORDER • <br>
+                            📅 ${new Date(order.preferred_date).toLocaleDateString()} • 🕒 ${order.preferred_time}`
+                            : `🟢 Preferred Date/Time • <br>
+                            📅 ${new Date(order.preferred_date).toLocaleDateString()} • 🕒 ${order.preferred_time}`
                         }
 
                     </small>
