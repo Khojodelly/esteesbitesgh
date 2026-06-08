@@ -5,8 +5,8 @@ console.log("script connected");
 // Change this when deploying
 // =========================
 
-//const API_URL = "https://esteesbites-backend.onrender.com";
-const API_URL = "http://localhost:5000";
+const API_URL = "https://esteesbites-backend.onrender.com";
+//const API_URL = "http://localhost:5000";
 
 
 

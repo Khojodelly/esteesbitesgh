@@ -2944,6 +2944,129 @@ db.query(`
     }
 });
 
+// =========================
+// GET ACTIVE COUPON BANNER
+// =========================
+
+app.get("/api/active-coupon", (req, res) => {
+
+    const sql = `
+        SELECT *
+        FROM coupons
+        WHERE is_active = 1
+        AND expiry_date >= CURDATE()
+        ORDER BY id DESC
+        LIMIT 1
+    `;
+
+    db.query(sql, (err, results) => {
+
+        if (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        res.json(results[0] || null);
+    });
+});
+
+// =========================
+// RECENT ORDERS TICKER
+// =========================
+
+app.get("/api/recent-orders", (req, res) => {
+
+    const sql = `
+        SELECT items
+        FROM orders
+        WHERE status != 'Cancelled'
+        ORDER BY id DESC
+        LIMIT 10
+    `;
+
+    db.query(sql, (err, results) => {
+
+        if (err) {
+
+            console.log(err);
+
+            return res.status(500).json([]);
+
+        }
+
+        res.json(results);
+
+    });
+
+});
+
+// =========================
+// GET RESTAURANT STATUS
+// =========================
+
+app.get("/api/restaurant-status", (req, res) => {
+
+    const sql = `
+        SELECT setting_value
+        FROM restaurant_settings
+        WHERE setting_key = 'restaurant_status'
+    `;
+
+    db.query(sql, (err, results) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        res.json({
+            status: results[0]?.setting_value || "open"
+        });
+
+    });
+
+});
+
+// =========================
+// ADMIN: UPDATE RESTAURANT STATUS
+// =========================
+
+app.put("/api/admin/restaurant-status", authenticateToken, (req, res) => {
+
+    const { status } = req.body;
+
+    if (!["open", "closed"].includes(status)) {
+        return res.status(400).json({
+            message: "Invalid status"
+        });
+    }
+
+    const sql = `
+        UPDATE restaurant_settings
+        SET setting_value = ?
+        WHERE setting_key = 'restaurant_status'
+    `;
+
+    db.query(sql, [status], (err) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        res.json({
+            message: "Restaurant status updated",
+            status
+        });
+
+    });
+
+});
+
 // START SERVER
 
 app.listen(port, () => {
