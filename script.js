@@ -616,6 +616,28 @@ document.addEventListener("click", (e) => {
 
     if (addCartBtn.classList.contains("add-cart-btn")) {
 
+        const isPreorderButton =
+                e.target.textContent.trim().toLowerCase().includes("preorder");
+
+            if (isPreorderButton) {
+
+                document.getElementById("preorder-meal-name").value =
+                    e.target.dataset.name;
+
+                document.getElementById("preorder-meal-price").value =
+                    e.target.dataset.price;
+
+                document.getElementById("preorder-meal-image").value =
+                    e.target.dataset.image;
+
+                const preorderModal =
+                    new bootstrap.Modal(document.getElementById("preorderModal"));
+
+                preorderModal.show();
+
+                return;
+            }
+
         const name =
             addCartBtn.dataset.name;
 
@@ -668,6 +690,64 @@ document.addEventListener("click", (e) => {
     }
 
 });
+
+// =========================
+// CONFIRM PREORDER
+// =========================
+
+const confirmPreorderBtn =
+    document.getElementById("confirm-preorder-btn");
+
+if (confirmPreorderBtn) {
+
+    confirmPreorderBtn.addEventListener("click", () => {
+
+        const preorderDate =
+            document.getElementById("preorder-date").value;
+
+        const preorderTime =
+            document.getElementById("preorder-time").value;
+
+        if (!preorderDate || !preorderTime) {
+            showToast("Please select preorder date and time", "error");
+            return;
+        }
+
+        const meal = {
+            name: document.getElementById("preorder-meal-name").value,
+            price: Number(document.getElementById("preorder-meal-price").value),
+            image: document.getElementById("preorder-meal-image").value,
+            quantity: 1,
+            order_type: "preorder",
+            preferred_date: preorderDate,
+            preferred_time: preorderTime
+        };
+
+        let cart =
+            JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+        cart.push(meal);
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(cart)
+        );
+
+        updateCartCount();
+        updateFloatingCartCount();
+
+        showToast("Preorder added to cart", "success");
+
+        const modal =
+            bootstrap.Modal.getInstance(
+                document.getElementById("preorderModal")
+            );
+
+        modal.hide();
+
+    });
+
+}
 
 
 
@@ -737,6 +817,14 @@ function renderCart() {
                             ${item.name}
                         </h5>
 
+                        ${item.order_type === "preorder" ? `
+                            <div class="preorder-info">
+                                <span class="preorder-badge">🟠 PREORDER</span>
+                                <small>📅 ${item.preferred_date}</small>
+                                <small>🕒 ${item.preferred_time}</small>
+                            </div>
+                        ` : ""}
+
                         <p class="cart-item-price mb-2">
                             GH₵ ${item.price}
                         </p>
@@ -797,6 +885,7 @@ function renderCart() {
 }
 
 renderCart();
+autofillPreorderCheckout();
 revealOnScroll();
 
 
@@ -969,6 +1058,52 @@ if (clearCartBtn) {
     });
 
 }
+
+// =========================
+// CONFIRM PREORDER
+// (Separate listener to handle preorder modal)
+document.addEventListener("click", function (e) {
+
+    if (e.target.id === "confirm-preorder-btn") {
+
+        const preorderDate = document.getElementById("preorder-date").value;
+        const preorderTime = document.getElementById("preorder-time").value;
+
+        if (!preorderDate || !preorderTime) {
+            showToast("Please select preorder date and time", "error");
+            return;
+        }
+
+        const meal = {
+            name: document.getElementById("preorder-meal-name").value,
+            price: Number(document.getElementById("preorder-meal-price").value),
+            image: document.getElementById("preorder-meal-image").value,
+            quantity: 1,
+            order_type: "preorder",
+            preferred_date: preorderDate,
+            preferred_time: preorderTime
+        };
+
+        let cart = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+        cart.push(meal);
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+
+        updateCartCount();
+        updateFloatingCartCount();
+
+        showToast("Preorder added to cart", "success");
+
+        const modalEl = document.getElementById("preorderModal");
+        const modal = bootstrap.Modal.getInstance(modalEl);
+
+        if (modal) {
+            modal.hide();
+        }
+    }
+
+});
 
 // =========================
 // COUPON STATE
@@ -2028,6 +2163,9 @@ if(loginForm){
             // Success
             showToast("Login successful!", "success");
 
+            // Call function to update UI immediately
+            showFloatingAdminButton();
+
             // Redirect after a short delay so toast is visible
             setTimeout(() => {
                 window.location.href = "index.html";
@@ -2223,6 +2361,9 @@ if(logoutBtn){
         localStorage.removeItem("loggedUser");
         localStorage.removeItem("token");
 
+        // Update button visibility
+        showFloatingAdminButton();
+
         // Redirect
         window.location.href = "login.html";
 
@@ -2407,15 +2548,21 @@ fetch(`${API_URL}/api/orders/${loggedUser.id}`, {
                             </div>
 
                             <div class="order-info-row">
+                            ${order.order_type === "preorder" ? `
+                            <div class="preorder-order-box">
+
+                                <span class="preorder-badge">
+                                    🟠 PREORDER
+                                </span> ` : ""}
                                 <span>Preferred Date</span>
-                                <strong>${order.preferred_date
+                                <strong> 📅${order.preferred_date
                                 ? new Date(order.preferred_date).toLocaleDateString()
                                 : "Not set"}</strong>
                             </div>
 
                             <div class="order-info-row">
                                 <span>Preferred Time</span>
-                                <strong>${order.preferred_time || "Not set"}</strong>
+                                <strong>🕒${order.preferred_time || "Not set"}</strong>
                             </div>
 
                             ${order.special_notes ? `
@@ -2655,6 +2802,13 @@ if (checkoutSummaryItems) {
 
                     <span>
                         ${item.name} × ${item.quantity}
+                        ${item.order_type === "preorder" ? `
+                        <div class="preorder-info">
+                            <span class="preorder-badge">🟠 PREORDER</span>
+                            <small>📅 ${item.preferred_date}</small>
+                            <small>🕒 ${item.preferred_time}</small>
+                        </div>
+                    ` : ""}
                     </span>
 
                     <span>
@@ -4411,11 +4565,12 @@ function loadKitchenQueue() {
                     </p>
 
                     <small class="text-muted d-block mb-2">
-                        ${order.order_type || "Delivery"} • 
-                        ${order.preferred_date
-                                ? new Date(order.preferred_date).toLocaleDateString()
-                                : "Not set"} • 
-                        ${order.preferred_time || "No time"}
+
+                        ${order.order_type === "preorder"
+                            ? `🟠 PREORDER • 📅 ${new Date(order.preferred_date).toLocaleDateString()} • 🕒 ${order.preferred_time}`
+                            : `🟢 ORDER NOW `
+                        }
+
                     </small>
 
                     ${order.special_notes ? `
@@ -6227,3 +6382,66 @@ function updateMealButtons() {
 }
 
 
+// =========================
+// AUTO-FILL PREORDER DATE/TIME ON CHECKOUT
+// =========================
+
+function autofillPreorderCheckout() {
+
+    const cart =
+        JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+    const preorderItem =
+        cart.find(item => item.order_type === "preorder");
+
+    if (!preorderItem) return;
+
+    const preferredDate =
+        document.getElementById("preferred-date");
+
+    const preferredTime =
+        document.getElementById("preferred-time");
+
+    if (preferredDate) {
+        preferredDate.value = preorderItem.preferred_date;
+    }
+
+    if (preferredTime) {
+        preferredTime.value = preorderItem.preferred_time;
+    }
+}
+
+// =========================
+// SHOW FLOATING ADMIN BUTTON ONLY FOR ADMIN
+// =========================
+
+function showFloatingAdminButton() {
+
+    const floatingAdminBtn =
+        document.getElementById("floating-admin-btn");
+
+    if (!floatingAdminBtn) {
+        console.log("Admin button not found in DOM");
+        return;
+    }
+
+    const savedUser =
+        JSON.parse(localStorage.getItem("loggedUser") || "null");
+
+    console.log("Saved user:", savedUser);
+
+    if (savedUser && savedUser.role && String(savedUser.role).toLowerCase() === "admin") {
+        console.log("User is admin, showing button");
+        floatingAdminBtn.classList.remove("d-none");
+        floatingAdminBtn.style.display = "flex";
+    } else {
+        console.log("User is not admin, hiding button");
+        floatingAdminBtn.classList.add("d-none");
+        floatingAdminBtn.style.display = "none";
+    }
+}
+
+showFloatingAdminButton();
+
+// Re-check when DOM is fully loaded in case of race conditions
+document.addEventListener("DOMContentLoaded", showFloatingAdminButton);
