@@ -5,8 +5,8 @@ console.log("script connected");
 // Change this when deploying
 // =========================
 
-const API_URL = "https://esteesbites-backend.onrender.com";
-//const API_URL = "http://localhost:5000";
+//const API_URL = "https://esteesbites-backend.onrender.com";
+const API_URL = "http://localhost:5000";
 
 
 
@@ -1121,6 +1121,7 @@ function completeOrderFlow() {
     sessionStorage.removeItem("pendingOrder");
     clearPendingOrderWindowName();
     clearPendingOrderCookie();
+    showOrderCelebration();
 
     setTimeout(() => {
         window.location.href = "orders.html";
@@ -1760,38 +1761,47 @@ if (mealsContainer) {
                     // SMART MEAL STATUS BEHAVIOR
                     // =========================
 
-                    const mealStatus =
-                        meal.availability_status || "Available Today";
+                    const restaurantClosed =
+                        window.restaurantStatus &&
+                        String(window.restaurantStatus.status).toLowerCase() === "closed";
 
-                    let buttonText = "Add to Cart";
-                    let buttonClass = "btn btn-dark w-100 add-cart-btn add-to-cart";
-                    let buttonDisabled = "";
-                    let extraCardClass = "";
+                const mealStatus = meal.availability_status || "Available Today";
 
-                    if (mealStatus === "Preorder") {
-                        buttonText = "Preorder Now";
-                    }
+                let buttonText = "Add to Cart";
+                let buttonClass = "btn btn-dark w-100 add-cart-btn add-to-cart";
+                let buttonDisabled = "";
+                let extraCardClass = "";
 
-                    else if (mealStatus === "Limited") {
-                        buttonText = "Order Limited Meal";
-                        extraCardClass = "limited-pulse";
-                    }
+                // If restaurant is closed, Available Today becomes Preorder
+                if (restaurantClosed && mealStatus === "Available Today") {
+                    buttonText = "Preorder Now";
+                }
 
-                    else if (mealStatus === "Sold Out") {
-                        buttonText = "Sold Out";
-                        buttonClass = "btn btn-secondary w-100";
-                        buttonDisabled = "disabled";
-                    }
+                // Existing statuses
+                if (mealStatus === "Preorder") {
+                    buttonText = "Preorder Now";
+                }
 
-                    else if (mealStatus === "Event Only") {
-                        buttonText = "Contact for Booking";
-                        buttonClass = "btn btn-outline-primary w-100";
-                    }
+                else if (mealStatus === "Limited") {
+                    buttonText = "Order Limited Meal";
+                    extraCardClass = "limited-pulse";
+                }
+
+                else if (mealStatus === "Sold Out") {
+                    buttonText = "Sold Out";
+                    buttonClass = "btn btn-secondary w-100";
+                    buttonDisabled = "disabled";
+                }
+
+                else if (mealStatus === "Event Only") {
+                    buttonText = "Contact for Booking";
+                    buttonClass = "btn btn-outline-primary w-100";
+                }
 
 
                 mealsContainer.innerHTML += `
 
-    <div class="col-lg-3 col-md-6 mb-4 menu-item reveal-zoom"
+    <div class="col-6 col-md-4 col-lg-3 menu-item reveal-zoom"
         data-category="${meal.category || 'all'}">
 
         <div class="card meal-card hover-lift h-100 ${extraCardClass} quick-view-trigger"
@@ -1839,21 +1849,17 @@ if (mealsContainer) {
             MEAL BODY
             ========================= -->
 
-            <div class="meal-card-body d-flex flex-column">
+            <div class="meal-card-body">
 
-                <h5 class="meal-title text-center">
-                    ${meal.name}
-                </h5>
-
-                <div class="mt-auto">
+                <h5 class="meal-title">${meal.name}</h5>
 
                     <div class="meal-footer-info">
-
                         <span class="meal-price">
                             GH₵ ${meal.price}
                         </span>
-
                     </div>
+
+                    <div class="mt-auto">
 
                     <!-- Add To Cart -->
                     <button
@@ -5797,3 +5803,380 @@ document.addEventListener("click", async (e) => {
         showToast("Something went wrong", "error");
     }
 });
+
+// =========================
+// LOAD COUPON BANNER
+// =========================
+
+const couponBannerContainer =
+    document.getElementById("coupon-banner-container");
+
+if (couponBannerContainer) {
+
+    fetch(`${API_URL}/api/active-coupon`)
+        .then(response => response.json())
+        .then(coupon => {
+
+            if (!coupon) {
+                couponBannerContainer.innerHTML = "";
+                return;
+            }
+
+            couponBannerContainer.innerHTML = `
+                <section class="coupon-banner-section" id="coupon-banner">
+                    <div class="coupon-banner-box">
+
+                        <button class="coupon-close-btn" onclick="closeCouponBanner()">
+                            ×
+                        </button>
+
+                        <div>
+                            <small>
+                                Use code 
+                                <span class="coupon-code" onclick="copyCouponCode('${coupon.code}')">
+                                    ${coupon.code}
+                                </span> 
+                                at checkout
+                            </small>
+
+                            <h2>
+                                Get ${coupon.discount_value}% Off
+                            </h2>
+
+                            <p>
+                                Hurry, offer ends in 
+                                <strong id="coupon-countdown"></strong>
+                            </p>
+                        </div>
+
+                        <a href="menu.html" class="coupon-order-btn">
+                            Order Now
+                        </a>
+
+                    </div>
+                </section>
+            `;
+
+            startCouponCountdown(coupon.expiry_date);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+// =========================
+// COPY COUPON CODE
+// =========================
+
+function copyCouponCode(code) {
+    navigator.clipboard.writeText(code);
+    showToast("Coupon code copied", "success");
+}
+
+
+// =========================
+// CLOSE COUPON BANNER
+// =========================
+
+function closeCouponBanner() {
+    const banner = document.getElementById("coupon-banner");
+
+    if (banner) {
+        banner.style.display = "none";
+    }
+}
+
+
+// =========================
+// COUPON COUNTDOWN
+// =========================
+
+function startCouponCountdown(expiryDate) {
+
+    const countdownEl =
+        document.getElementById("coupon-countdown");
+
+    if (!countdownEl) return;
+
+    const endDate = new Date(expiryDate).getTime();
+
+    const timer = setInterval(() => {
+
+        const now = new Date().getTime();
+        const distance = endDate - now;
+
+        if (distance <= 0) {
+            clearInterval(timer);
+            countdownEl.textContent = "soon";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) /
+            (1000 * 60 * 60)
+        );
+
+        countdownEl.textContent =
+            `${days}d ${hours}h`;
+
+    }, 1000);
+}
+
+// =========================
+// LIVE ORDER TICKER
+// =========================
+
+const liveOrderText =
+    document.getElementById("live-order-text");
+
+if (liveOrderText) {
+
+    fetch(`${API_URL}/api/recent-orders`)
+
+    .then(response => response.json())
+
+    .then(orders => {
+
+        if (!orders || orders.length === 0) return;
+
+        let index = 0;
+
+        function showOrder() {
+
+            const order = orders[index];
+
+            const items = JSON.parse(order.items);
+
+            liveOrderText.innerHTML =
+                `🔥 Someone just ordered <strong>${items[0].name}</strong>`;
+
+            index++;
+
+            if (index >= orders.length) {
+                index = 0;
+            }
+
+        }
+
+        showOrder();
+
+        setInterval(showOrder, 8000);
+
+    })
+
+    .catch(error => console.log(error));
+
+}
+
+// =========================
+// RESTAURANT OPEN / CLOSED STATUS
+// =========================
+
+function loadRestaurantStatus() {
+
+    const banner = document.querySelector(".restaurant-status-banner");
+    const text = document.getElementById("restaurant-status-text");
+
+    if (!banner || !text) return;
+
+    const now = new Date();
+    const hour = now.getHours();
+
+    // Change opening hours here
+    const openHour = 8;
+    const closeHour = 22;
+
+    if (hour >= openHour && hour < closeHour) {
+
+        banner.classList.remove("closed");
+
+        text.textContent =
+            "Open Now • Delivery: 25–35 mins";
+
+    } else {
+
+        banner.classList.add("closed");
+
+        text.textContent =
+            "Closed Now • Preorders accepted for tomorrow";
+
+    }
+}
+
+loadRestaurantStatus();
+
+// =========================
+// SHOW ORDER CELEBRATION
+// =========================
+
+function showOrderCelebration() {
+
+    const celebration =
+        document.getElementById("order-success-celebration");
+
+    if (!celebration) return;
+
+    celebration.classList.remove("d-none");
+
+    setTimeout(() => {
+        celebration.classList.add("d-none");
+    }, 2500);
+}
+
+// =========================
+// ADMIN RESTAURANT STATUS
+// =========================
+
+const statusLabel =
+    document.getElementById("restaurant-status-label");
+
+const toggleButton =
+    document.getElementById("toggle-restaurant-status");
+
+if (statusLabel && toggleButton) {
+
+    loadRestaurantStatus();
+
+    toggleButton.addEventListener("click", () => {
+
+        const newStatus =
+            toggleButton.dataset.status === "open"
+                ? "closed"
+                : "open";
+
+        fetch(`${API_URL}/api/admin/restaurant-status`, {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json",
+                Authorization:
+                    `Bearer ${localStorage.getItem("token")}`
+            },
+
+            body: JSON.stringify({
+                status: newStatus
+            })
+
+        })
+
+        .then(res => res.json())
+
+        .then(() => {
+
+            showToast(
+                "Restaurant status updated",
+                "success"
+            );
+
+            loadRestaurantStatus();
+
+        })
+
+        .catch(console.log);
+
+    });
+
+}
+
+function loadRestaurantStatus() {
+
+    fetch(`${API_URL}/api/restaurant-status`)
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        // expose restaurant status globally for UI logic
+        window.restaurantStatus = data;
+
+        if (!statusLabel || !toggleButton) return;
+
+        if (data.status === "open") {
+
+            statusLabel.className =
+                "badge bg-success fs-6";
+
+            statusLabel.innerHTML =
+                "🟢 Open";
+
+            toggleButton.innerHTML =
+                "Close Restaurant";
+
+            toggleButton.className =
+                "btn btn-danger";
+
+            toggleButton.dataset.status =
+                "open";
+
+        }
+
+        else {
+
+            statusLabel.className =
+                "badge bg-danger fs-6";
+
+            statusLabel.innerHTML =
+                "🔴 Closed";
+
+            toggleButton.innerHTML =
+                "Open Restaurant";
+
+            toggleButton.className =
+                "btn btn-success";
+
+            toggleButton.dataset.status =
+                "closed";
+
+        }
+
+    });
+
+}
+
+// =========================
+// CUSTOMER RESTAURANT STATUS
+// =========================
+
+function loadCustomerRestaurantStatus() {
+
+    const statusBox =
+        document.getElementById("customer-restaurant-status");
+
+    fetch(`${API_URL}/api/restaurant-status`)
+        .then(res => res.json())
+        .then(data => {
+
+            // expose restaurant status globally for UI logic
+            window.restaurantStatus = data;
+
+            if (!statusBox) return;
+
+            if (data.status === "closed") {
+
+                statusBox.innerHTML = `
+                    <div class="restaurant-closed-banner">
+                        🔴 ESTEESBITES is currently closed.
+                        Preorders are still welcome.
+                    </div>
+                `;
+
+
+            } else {
+
+                statusBox.innerHTML = `
+                    <div class="restaurant-open-banner">
+                        🟢 ESTEESBITES is open now.
+                    </div>
+                `;
+
+            }
+
+        })
+        .catch(console.log);
+}
+
+loadCustomerRestaurantStatus();
+
+
