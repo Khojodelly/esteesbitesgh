@@ -5,8 +5,8 @@ console.log("script connected");
 // Change this when deploying
 // =========================
 
-//const API_URL = "https://esteesbites-backend.onrender.com";
-const API_URL = "http://localhost:5000";
+const API_URL = "https://esteesbites-backend.onrender.com";
+//const API_URL = "http://localhost:5000";
 
 
 
@@ -2004,6 +2004,7 @@ if (mealsContainer) {
                         data-name="${meal.name}"
                         data-price="${meal.price}"
                         data-image="${imageUrl}"
+                        ${mealStatus === "Event Only" ? `onclick="contactEventBooking('${meal.name.replace(/'/g, "\\'")}')"` : ""}
                         ${buttonDisabled}>
 
                         ${buttonText}
@@ -2543,29 +2544,30 @@ fetch(`${API_URL}/api/orders/${loggedUser.id}`, {
                         ${mealsHTML}
                     </div>
 
-                    
-                            <div class="order-info-row">
-                                <span>Order Type</span>
-                                <strong>${order.order_type || "Delivery"}</strong>
-                            </div>
+                    <div class="order-info-row">
+                        <span>Order Type</span>
+                        <strong>${order.order_type || "Delivery"}</strong>
+                    </div>
 
-                            <div class="order-info-row">
-                            ${order.order_type === "preorder" ? `
-                            <div class="preorder-order-box">
+                    ${order.order_type === "preorder" ? `
+                        <div class="preorder-order-box">
+                            <span class="preorder-badge">
+                                🟠 PREORDER
+                            </span>
+                        </div>
+                    ` : ""}
 
-                                <span class="preorder-badge">
-                                    🟠 PREORDER
-                                </span> ` : ""}
-                                <span>Preferred Date</span>
-                                <strong> 📅${order.preferred_date
-                                ? new Date(order.preferred_date).toLocaleDateString()
-                                : "Not set"}</strong>
-                            </div>
+                    <div class="order-info-row">
+                        <span>Preferred Date</span>
+                        <strong> 📅${order.preferred_date
+                            ? new Date(order.preferred_date).toLocaleDateString()
+                            : "Not set"}</strong>
+                    </div>
 
-                            <div class="order-info-row">
-                                <span>Preferred Time</span>
-                                <strong>🕒${order.preferred_time || "Not set"}</strong>
-                            </div>
+                    <div class="order-info-row">
+                        <span>Preferred Time</span>
+                        <strong>🕒${order.preferred_time || "Not set"}</strong>
+                    </div>
 
                             ${order.special_notes ? `
                                 <div class="special-notes-box mt-3">
@@ -2990,12 +2992,14 @@ function loadAdminOrders(page = 1){
                             <select class="form-select status-select"
                                     data-id="${order.id}">
                                     <option value="Accepted" ${order.status === "Accepted" ? "selected" : ""}>Accepted</option>
-                                    <option value="Received" ${order.status === "Received" ? "selected" : ""}>Received</option>
+
                                 <option value="Pending" ${order.status === "Pending" ? "selected" : ""}>Pending</option>
                                 <option value="Preparing" ${order.status === "Preparing" ? "selected" : ""}>Preparing</option>
                                 <option value="Delivery" ${order.status === "Delivery" ? "selected" : ""}>Delivery</option>
                                 <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
+                                <option value="Received" ${order.status === "Received" ? "selected" : ""}>Received</option>
                                 <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+                                
                             </select>
                         </td>
                         <td>${new Date(order.created_at).toLocaleString()}</td>
@@ -3801,6 +3805,17 @@ async function toggleFavorite(mealId) {
 }
 
 // =========================
+// EVENT ONLY MEAL WHATSAPP CONTACT
+// =========================
+
+function contactEventBooking(mealName) {
+    const restaurantPhone = "233594909546"; // WhatsApp uses country code without +
+    const message = `Hi ESTEESBITES, I'm interested in ${mealName} for an event. Can we discuss catering options?`;
+    const whatsappUrl = `https://wa.me/${restaurantPhone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+}
+
+// =========================
 // GLOBAL SCROLL REVEAL ANIMATION
 // Works for dynamically loaded meal cards too
 // =========================
@@ -4093,18 +4108,22 @@ document.addEventListener("click", (e) => {
         addBtn.textContent = "Sold Out";
         addBtn.disabled = true;
         addBtn.className = "btn btn-secondary w-100";
+        addBtn.onclick = null;
     } else if (status === "Preorder") {
         addBtn.textContent = "Preorder Now";
         addBtn.disabled = false;
         addBtn.className = "btn btn-dark w-100";
+        addBtn.onclick = null;
     } else if (status === "Event Only") {
         addBtn.textContent = "Contact for Booking";
         addBtn.disabled = false;
         addBtn.className = "btn btn-outline-primary w-100";
+        addBtn.onclick = () => contactEventBooking(name);
     } else {
         addBtn.textContent = "Add to Cart";
         addBtn.disabled = false;
         addBtn.className = "btn btn-dark w-100";
+        addBtn.onclick = null;
     }
 
     const modal = new bootstrap.Modal(
@@ -4591,10 +4610,10 @@ function loadKitchenQueue() {
                             data-id="${order.id}">
                         <option value="Pending" ${order.status === "Pending" ? "selected" : ""}>Pending</option>
                         <option value="Accepted" ${order.status === "Accepted" ? "selected" : ""}>Accepted</option>
-                        <option value="Received" ${order.status === "Received" ? "selected" : ""}>Received</option>
                         <option value="Preparing" ${order.status === "Preparing" ? "selected" : ""}>Preparing</option>
                         <option value="Delivery" ${order.status === "Delivery" ? "selected" : ""}>Delivery</option>
                         <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
+                        <option value="Received" ${order.status === "Received" ? "selected" : ""}>Received</option>
                         <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
                     </select>
 
@@ -6354,6 +6373,7 @@ function updateMealButtons() {
 
     cards.forEach(card => {
         const statusRaw = card.dataset.status || 'Available Today';
+        const mealName = card.dataset.name;
         const status = (restaurantClosed && statusRaw === 'Available Today') ? 'Preorder' : statusRaw;
 
         // Update category badge text if present
@@ -6369,22 +6389,27 @@ function updateMealButtons() {
             btn.textContent = 'Sold Out';
             btn.className = 'btn btn-secondary w-100';
             btn.disabled = true;
+            btn.onclick = null;
         } else if (status === 'Preorder') {
             btn.textContent = 'Preorder Now';
             btn.className = 'btn btn-dark w-100 add-cart-btn add-to-cart';
             btn.disabled = false;
+            btn.onclick = null;
         } else if (status === 'Event Only') {
-            btn.textContent = 'Contact for Booking';
+            btn.textContent = 'Contact Now';
             btn.className = 'btn btn-outline-primary w-100';
             btn.disabled = false;
+            btn.onclick = () => contactEventBooking(mealName);
         } else if (status === 'Limited') {
-            btn.textContent = 'Order Limited Meal';
+            btn.textContent = 'Limited Meal';
             btn.className = 'btn btn-dark w-100 add-cart-btn add-to-cart';
             btn.disabled = false;
+            btn.onclick = null;
         } else {
             btn.textContent = 'Add to Cart';
             btn.className = 'btn btn-dark w-100 add-cart-btn add-to-cart';
             btn.disabled = false;
+            btn.onclick = null;
         }
     });
 }
