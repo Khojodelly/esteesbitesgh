@@ -3067,6 +3067,190 @@ app.put("/api/admin/restaurant-status", authenticateToken, (req, res) => {
 
 });
 
+// =========================
+// FORGOT PASSWORD: SEND SMS CODE
+// =========================
+
+app.post("/api/forgot-password/send-code", (req, res) => {
+
+    const { phone } = req.body;
+
+    if (!phone) {
+        return res.status(400).json({
+            message: "Phone number is required"
+        });
+    }
+
+    const findUserSql = `
+        SELECT id, fullname, phone
+        FROM users
+        WHERE phone = ?
+    `;
+
+    db.query(findUserSql, [phone], (err, results) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({
+                message: "No account found with this phone number"
+            });
+        }
+
+        const user = results[0];
+
+        const checkActiveCodeSql = `
+        SELECT *
+        FROM password_reset_codes
+        WHERE phone = ?
+        AND used = FALSE
+        AND expires_at > NOW()
+        LIMIT 1
+     `;
+
+     db.query(checkActiveCodeSql, [phone], (err, activeCodes) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        if (activeCodes.length > 0) {
+            return res.status(400).json({
+                message: "A reset code has already been sent. Please wait or use the existing code."
+            });
+        }
+
+        // generate reset code here
+        const resetCode =
+            Math.floor(100000 + Math.random() * 900000).toString();
+
+        const expiresAt =
+            new Date(Date.now() + 10 * 60 * 1000);
+            const insertSql = `
+            INSERT INTO password_reset_codes
+            (user_id, phone, code, expires_at)
+            VALUES (?, ?, ?, ?)
+        `;
+
+        db.query(
+            insertSql,
+            [user.id, phone, resetCode, expiresAt],
+            (err) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        message: "Failed to create reset code"
+                    });
+                }
+
+                sendCustomerSMS(
+                    phone,
+                    `Hi ${user.fullname}, your ESTEESBITES password reset code is ${resetCode}. It expires in 10 minutes.`
+                );
+
+                res.json({
+                    message: "Reset code sent successfully"
+                });
+            }
+        );
+     });
+
+        
+
+        
+    });
+});
+
+// =========================
+// FORGOT PASSWORD: RESET PASSWORD
+// =========================
+
+app.post("/api/forgot-password/reset", async (req, res) => {
+
+    const { phone, code, newPassword } = req.body;
+
+    if (!phone || !code || !newPassword) {
+        return res.status(400).json({
+            message: "Phone, code, and new password are required"
+        });
+    }
+
+    const findCodeSql = `
+        SELECT *
+        FROM password_reset_codes
+        WHERE phone = ?
+        AND code = ?
+        AND used = FALSE
+        AND expires_at > NOW()
+        ORDER BY id DESC
+        LIMIT 1
+    `;
+
+    db.query(findCodeSql, [phone, code], async (err, results) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: "Database error"
+            });
+        }
+
+        if (results.length === 0) {
+            return res.status(400).json({
+                message: "Invalid or expired reset code"
+            });
+        }
+
+        const resetRecord = results[0];
+
+        const hashedPassword =
+            await bcrypt.hash(newPassword, 10);
+
+        const updatePasswordSql = `
+            UPDATE users
+            SET password = ?
+            WHERE id = ?
+        `;
+
+        db.query(
+            updatePasswordSql,
+            [hashedPassword, resetRecord.user_id],
+            (err) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        message: "Failed to update password"
+                    });
+                }
+
+                const markUsedSql = `
+                    UPDATE password_reset_codes
+                    SET used = TRUE
+                    WHERE id = ?
+                `;
+
+                db.query(markUsedSql, [resetRecord.id]);
+
+                const deleteOldCodesSql = `
+                    DELETE FROM password_reset_codes
+                    WHERE user_id = ?
+                `;
+
+                db.query(deleteOldCodesSql, [resetRecord.user_id]);
+
+                res.json({
+                    message: "Password reset successfully"
+                });
+            }
+        );
+    });
+});
+
 // START SERVER
 
 app.listen(port, () => {

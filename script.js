@@ -2109,6 +2109,15 @@ if(loginForm){
         const password =
             document.getElementById("login-password").value;
 
+         const confirmPassword =
+            document.getElementById("confirm-password").value.trim();
+
+            if (password !== confirmPassword) {
+                showToast("Passwords do not match", "error");
+                return;
+            }
+
+
         // Message area
         const loginMessage =
             document.getElementById("login-message");
@@ -6478,3 +6487,111 @@ showFloatingAdminButton();
 
 // Re-check when DOM is fully loaded in case of race conditions
 document.addEventListener("DOMContentLoaded", showFloatingAdminButton);
+
+// =========================
+// FORGOT PASSWORD: SEND CODE
+// =========================
+
+const forgotPasswordForm =
+    document.getElementById("forgot-password-form");
+
+if (forgotPasswordForm) {
+
+    forgotPasswordForm.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const phone =
+            document.getElementById("reset-phone").value.trim();
+
+        try {
+            const response = await fetch(`${API_URL}/api/forgot-password/send-code`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ phone })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showToast(data.message || "Failed to send code", "error");
+                return;
+            }
+
+            showToast("Reset code sent by SMS", "success");
+
+        } catch (error) {
+            console.log(error);
+            showToast("Something went wrong", "error");
+        }
+    });
+}
+
+
+// =========================
+// FORGOT PASSWORD: RESET PASSWORD
+// =========================
+
+const resetPasswordForm =
+    document.getElementById("reset-password-form");
+
+if (resetPasswordForm) {
+
+    resetPasswordForm.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const phone =
+            document.getElementById("reset-phone").value.trim();
+
+        const code =
+            document.getElementById("reset-code").value.trim();
+
+        const newPassword =
+            document.getElementById("new-password").value.trim();
+
+        const confirmPassword =
+            document.getElementById("confirm-password").value.trim();
+
+            if (newPassword !== confirmPassword) {
+                showToast("Passwords do not match", "error");
+                return;
+            }
+
+        try {
+            const response = await fetch(`${API_URL}/api/forgot-password/reset`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    phone,
+                    code,
+                    newPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showToast(data.message || "Failed to reset password", "error");
+                return;
+            }
+
+                showToast(
+                    "Password reset successfully. Redirecting to login...",
+                    "success"
+                );
+
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+
+        } catch (error) {
+            console.log(error);
+            showToast("Something went wrong", "error");
+        }
+    });
+}
