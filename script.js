@@ -2109,13 +2109,9 @@ if(loginForm){
         const password =
             document.getElementById("login-password").value;
 
-         const confirmPassword =
-            document.getElementById("confirm-password").value.trim();
 
-            if (password !== confirmPassword) {
-                showToast("Passwords do not match", "error");
-                return;
-            }
+
+            
 
 
         // Message area
@@ -2229,6 +2225,13 @@ if(registerForm){
             document.getElementById(
                 "register-password"
             ).value;
+                 const confirmPassword =
+            document.getElementById("confirm-password").value.trim();
+
+            if (password !== confirmPassword) {
+                showToast("Passwords do not match", "error");
+                return;
+            }
 
         // Message
         const registerMessage =
